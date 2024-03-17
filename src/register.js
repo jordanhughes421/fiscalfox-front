@@ -3,7 +3,7 @@ import { Outlet, Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import './register.css'
 import React, { useState } from 'react';
-const baseUrl = 'http://localhost:3001'; // Adjust according to your backend server
+const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com/'; // Adjust according to your backend server
 
 function Register() {
   const navigate = useNavigate();
