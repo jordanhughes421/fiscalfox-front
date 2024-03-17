@@ -1,8 +1,9 @@
 // HomePage.js example
 import { Outlet, Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import './register.css'
 import React, { useState } from 'react';
-const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com'; // Adjust according to your backend server
+const baseUrl = 'http://localhost:3001'; // Adjust according to your backend server
 
 function Register() {
   const navigate = useNavigate();
@@ -53,36 +54,50 @@ function Register() {
     }
   };
 
-  return (
+    return (
     <div className="register-container">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Register</button>
-      </form>
+      <div className="form-wrapper">
+        <h2>Sign Up</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="input-container">
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="input-container">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email Id"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="input-container">
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="submit-container">
+            <button type="submit" className="submit-btn">Sign Up</button>
+          </div>
+          <div className="login-container">
+            <span>Already have an account?</span>
+            <button onClick={() => navigate('/login')} className="login-btn">Login</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
