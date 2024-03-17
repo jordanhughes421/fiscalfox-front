@@ -1,39 +1,57 @@
-import React, { useEffect } from 'react';
-import { Outlet, Link } from "react-router-dom";
-import { useAuth } from './AuthContext'; // Import useAuth only
+import React from 'react';
+import { Outlet, NavLink } from "react-router-dom";
+import { useAuth } from './AuthContext';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+
+// Custom styling for the active link
+const activeStyle = {
+    textDecoration: "underline",
+};
 
 function HomePage() {
-    const { isLoggedIn, logout } = useAuth(); // Removed setIsLoggedIn since it's not directly used here
+    const { isLoggedIn, logout } = useAuth();
 
     return (
-        <>
-            <nav>
-                {isLoggedIn ? (
-                    // If logged in, welcome the user and provide a logout button
-                    <div>Welcome, user! <button onClick={logout}>Logout</button></div>
-                ) : (
-                    // If not logged in, suggest to log in or register
-                    <div>Please log in or register.</div>
-                )}
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    { !isLoggedIn && ( // Only show these links if the user is not logged in
-                        <>
-                            <li>
-                                <Link to="/login">Login</Link>
-                            </li>
-                            <li>
-                                <Link to="/register">Register</Link>
-                            </li>
-                        </>
-                    )}
-                </ul>
-            </nav>
-
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters>
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component="div"
+                            sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}
+                        >
+                            Fiscal Fox
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'flex-end' }}>
+                            <Button color="inherit" component={NavLink} to="/" end style={({ isActive }) => isActive ? activeStyle : undefined}>
+                                Home
+                            </Button>
+                            {!isLoggedIn && (
+                                <>
+                                    <Button color="inherit" component={NavLink} to="/register" style={({ isActive }) => isActive ? activeStyle : undefined}>
+                                        Register
+                                    </Button>
+                                    <Button color="inherit" component={NavLink} to="/login" style={({ isActive }) => isActive ? activeStyle : undefined}>
+                                        Login
+                                    </Button>
+                                </>
+                            )}
+                            {isLoggedIn && (
+                                <Button color="inherit" onClick={logout}>Logout</Button>
+                            )}
+                        </Box>
+                    </Toolbar>
+                </Container>
+            </AppBar>
             <Outlet />
-        </>
+        </Box>
     );
 }
 
