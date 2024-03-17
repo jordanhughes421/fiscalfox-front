@@ -1,25 +1,24 @@
 import React, { useEffect } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import { useAuth } from './AuthContext'; // Import useAuth only
+import Dashboard from './Dashboard'; // Import Dashboard component
 
 function HomePage() {
-    const { isLoggedIn, logout } = useAuth(); // Removed setIsLoggedIn since it's not directly used here
-
+    const { isLoggedIn, logout } = useAuth();
+    
     return (
         <>
             <nav>
                 {isLoggedIn ? (
-                    // If logged in, welcome the user and provide a logout button
                     <div>Welcome, user! <button onClick={logout}>Logout</button></div>
                 ) : (
-                    // If not logged in, suggest to log in or register
                     <div>Please log in or register.</div>
                 )}
                 <ul>
                     <li>
                         <Link to="/">Home</Link>
                     </li>
-                    { !isLoggedIn && ( // Only show these links if the user is not logged in
+                    { !isLoggedIn && (
                         <>
                             <li>
                                 <Link to="/login">Login</Link>
@@ -31,6 +30,8 @@ function HomePage() {
                     )}
                 </ul>
             </nav>
+
+            {isLoggedIn && <Dashboard />} {/* Render Dashboard only if logged in */}
 
             <Outlet />
         </>
