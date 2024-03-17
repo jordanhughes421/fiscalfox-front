@@ -4,10 +4,10 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
-import HomePage from './HomePage'; // Make sure the path to your HomePage component is correct
-import Login from './login';
-import Register from './register';
-import { AuthProvider } from './AuthContext';
+import HomePage from './Components/HomePage/HomePage'; // Make sure the path to your HomePage component is correct
+import Login from './Components/auth/login';
+import Register from './Components/auth/register';
+import { AuthProvider } from './Components/auth/AuthContext';
 import Navbar from './Components/Navbar/navbar';
 
 function App() {
