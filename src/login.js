@@ -48,6 +48,7 @@ function Login() {
       // Store token in localStorage or sessionStorage
       localStorage.setItem('token', data.token); // Assuming 'data.token' is your token
       localStorage.setItem('isLoggedIn', true);
+      localStorage.setItem('fiscalfoxID', data.user.id)
       login(data.token);
       console.log(localStorage.getItem('token'));
       console.log(localStorage.getItem('isLoggedIn'));

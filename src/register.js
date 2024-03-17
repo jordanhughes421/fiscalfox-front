@@ -44,6 +44,7 @@ function Register() {
       console.log(data);
       localStorage.setItem('token', data.token); // Assuming 'data.token' is your token
       localStorage.setItem('isLoggedIn', true);
+      localStorage.setItem('fiscalfoxID', data.user.id)
       navigate('/');// Redirect the user or show a success message
       
       // For example, if login is successful, you might want to redirect

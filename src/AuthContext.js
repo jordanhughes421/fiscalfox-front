@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => { // Use camelCase for functions
     localStorage.removeItem('token'); // Remove token from storage
     localStorage.setItem('isLoggedIn', false); // Update isLoggedIn status
+    localStorage.removeItem('fiscalfoxID')
     setIsLoggedIn(false); // Update state
   };
 

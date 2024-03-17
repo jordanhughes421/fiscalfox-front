@@ -7,6 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import Dashboard from './Dashboard'; // Import Dashboard component
 
 // Custom styling for the active link
 const activeStyle = {
@@ -51,7 +52,9 @@ function HomePage() {
                 </Container>
             </AppBar>
             <Outlet />
+            {isLoggedIn && <Dashboard />} {/* Render Dashboard only if logged in */}
         </Box>
+
     );
 }
 
