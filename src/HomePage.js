@@ -19,39 +19,6 @@ function HomePage() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
-                <Container maxWidth="xl">
-                    <Toolbar disableGutters>
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            component="div"
-                            sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}
-                        >
-                            Fiscal Fox
-                        </Typography>
-                        <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'flex-end' }}>
-                            <Button color="inherit" component={NavLink} to="/" end style={({ isActive }) => isActive ? activeStyle : undefined}>
-                                Home
-                            </Button>
-                            {!isLoggedIn && (
-                                <>
-                                    <Button color="inherit" component={NavLink} to="/register" style={({ isActive }) => isActive ? activeStyle : undefined}>
-                                        Register
-                                    </Button>
-                                    <Button color="inherit" component={NavLink} to="/login" style={({ isActive }) => isActive ? activeStyle : undefined}>
-                                        Login
-                                    </Button>
-                                </>
-                            )}
-                            {isLoggedIn && (
-                                <Button color="inherit" onClick={logout}>Logout</Button>
-                            )}
-                        </Box>
-                    </Toolbar>
-                </Container>
-            </AppBar>
-            <Outlet />
             {isLoggedIn && <Dashboard />} {/* Render Dashboard only if logged in */}
         </Box>
 

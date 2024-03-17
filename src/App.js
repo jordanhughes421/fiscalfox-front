@@ -8,12 +8,14 @@ import HomePage from './HomePage'; // Make sure the path to your HomePage compon
 import Login from './login';
 import Register from './register';
 import { AuthProvider } from './AuthContext';
+import Navbar from './Components/Navbar/navbar';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <div className="App">
+          <Navbar/>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="login" element={<Login />} />
