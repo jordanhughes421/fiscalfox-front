@@ -14,8 +14,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "_commentLocalDev": "Local Dev: Use `npm run local` for hot reloading and real-time changes.",
+    "_commentProdLikeTesting": "Prod-like Testing: Build with `npm run build`, then serve with `npm start` for a production mimic.",
+    "_commentDeployment": "Deployment: Use `heroku-postbuild` for building in the deployment process.",
     "start": "serve -s build",
     "build": "react-scripts build",
+    "local": "react-scripts start", 
     "heroku-postbuild": "npm run build"
   },
   "eslintConfig": {
