@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import ProjectFetcher from '../fetchers/projectFetcher';
 import ExpenseFetcher from '../fetchers/expenseFetcher';
+import RevenueFetcher from '../fetchers/revenueFetcher';
 
 // Custom styling for the active link
 const activeStyle = {
@@ -22,6 +23,7 @@ function HomePage() {
         <Box sx={{ flexGrow: 1 }}>
             {isLoggedIn && <ProjectFetcher />} {/* Render Dashboard only if logged in */}
             {isLoggedIn && <ExpenseFetcher />} {/* Render Dashboard only if logged in */}
+            {isLoggedIn && <RevenueFetcher />} {/* Render Dashboard only if logged in */}
         </Box>
 
     );
