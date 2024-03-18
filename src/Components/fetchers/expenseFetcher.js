@@ -19,6 +19,7 @@ const ExpenseFetcher = () => {
   useEffect(() => {
     const fetchExpensesAndProjects = async () => {
       const token = localStorage.getItem('token');
+      console.log('expense fetcher');
 
       try {
         const [expensesResponse, projectsResponse] = await Promise.all([

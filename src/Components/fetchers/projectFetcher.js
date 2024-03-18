@@ -10,6 +10,7 @@ const ProjectFetcher = () => {
 
   useEffect(() => {
     const fetchProjectsExpensesAndRevenues = async () => {
+      console.log('project fetcher');
       const token = localStorage.getItem('token');
 
       try {
