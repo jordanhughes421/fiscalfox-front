@@ -5,30 +5,72 @@ const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.co
 const ProjectFetcher = () => {
   const [projects, setProjects] = useState([]);
   const [newProjectName, setNewProjectName] = useState('');
+  const [expenses, setExpenses] = useState([]);
+  const [revenues, setRevenues] = useState([]); // New state for storing revenues
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const userID = localStorage.getItem('fiscalfoxID');
+    const fetchProjectsExpensesAndRevenues = async () => {
       const token = localStorage.getItem('token');
+
       try {
-        const response = await fetch(`${baseUrl}/projects`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Assuming the token is stored under this key
-          }
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setProjects(data);
+        const [expensesResponse, projectsResponse, revenuesResponse] = await Promise.all([
+          fetch(`${baseUrl}/expense`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            }
+          }),
+          fetch(`${baseUrl}/projects`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            }
+          }),
+          fetch(`${baseUrl}/revenue`, { // Fetching revenue data
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            }
+          })
+        ]);
+
+        if (expensesResponse.ok && projectsResponse.ok && revenuesResponse.ok) {
+          const expensesData = await expensesResponse.json();
+          const projectsData = await projectsResponse.json();
+          const revenuesData = await revenuesResponse.json(); // Getting revenues data
+          setExpenses(expensesData);
+          setRevenues(revenuesData); // Setting the revenues state
+          
+          // Combining projects with their expenses and revenues
+          const projectsWithExpensesAndRevenues = projectsData.map(project => {
+            const projectExpenses = expensesData.filter(expense => project.expenses.includes(expense._id));
+            const projectRevenues = revenuesData.filter(revenue => project._id === revenue.project);
+
+            // Calculating total expenses and revenues for the project
+            const totalExpenses = projectExpenses.reduce((acc, curr) => acc + curr.amount, 0);
+            const totalRevenues = projectRevenues.reduce((acc, curr) => acc + curr.amount, 0);
+
+            // Calculating profit for the project
+            const profit = totalRevenues - totalExpenses;
+
+            return {
+              ...project,
+              expenses: projectExpenses,
+              revenues: projectRevenues,
+              profit, // Adding profit to the project object
+            };
+          });
+
+          setProjects(projectsWithExpensesAndRevenues);
         } else {
-          throw new Error(data.message || "Failed to fetch projects");
+          throw new Error("Failed to fetch expenses, revenues, or projects");
         }
       } catch (error) {
-        console.error("Error fetching projects:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchProjects();
+    fetchProjectsExpensesAndRevenues();
   }, []);
 
   const handleAddProject = async (e) => {
@@ -42,31 +84,41 @@ const ProjectFetcher = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ name: newProjectName, user: { id:userID }}),
+        body: JSON.stringify({ name: newProjectName, user: userID }), // Adjusted to match expected user ID format
       });
-      const newProject = await response.json();
       if (response.ok) {
-        setProjects([...projects, newProject]);
+        const newProject = await response.json();
+        setProjects([...projects, { ...newProject, expenses: [], revenues: [] }]);
         setNewProjectName(''); // Reset the input field after successful addition
       } else {
-        throw new Error(newProject.message || "Failed to add project");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to add project");
       }
     } catch (error) {
-      console.error("Error adding project:", error);
+      console.error("Error adding project:", error.message);
     }
   };
 
   return (
     <div>
       <h2>My Projects</h2>
-
       {projects.map(project => (
-        <ul key={project._id}>
-          <li>{project.name}</li>
-          <li>{project.expenses}</li>
-        </ul>
-          
-          
+        <div key={project._id}>
+          <h3>{project.name}</h3>
+          <h5>Expenses:</h5>
+          <ul>
+            {project.expenses.map(expense => (
+              <li key={expense._id}>{expense.description}: ${expense.amount}</li>
+            ))}
+          </ul>
+          <h5>Revenues:</h5>
+          <ul>
+            {project.revenues.map(revenue => (
+              <li key={revenue._id}>{revenue.description}: ${revenue.amount}</li>
+            ))}
+          </ul>
+          <h5>Profit: ${project.profit}</h5> {/* Displaying profit */}
+        </div>
       ))}
       <form onSubmit={handleAddProject}>
         <input
