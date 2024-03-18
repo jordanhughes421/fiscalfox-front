@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext'; // Import useAuth only
-
-
-
+import { useAuth } from './AuthContext';
+import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
 
 const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com'; // Adjust according to your backend server
 
@@ -35,24 +33,16 @@ function Login() {
     };
   
     try {
-      // Update the fetch URL to your backend endpoint for login
       const response = await fetch(`${baseUrl}/auth/login`, requestOptions);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-  
-      // Handle response data
       console.log(data);
-      // Assuming 'data' contains a success indicator or token
-      // Store token in localStorage or sessionStorage
       localStorage.setItem('token', data.token); // Assuming 'data.token' is your token
       localStorage.setItem('isLoggedIn', true);
-      localStorage.setItem('fiscalfoxID', data.user.id)
+      localStorage.setItem('fiscalfoxID', data.user.id);
       login(data.token);
-      console.log(localStorage.getItem('token'));
-      console.log(localStorage.getItem('isLoggedIn'));
-      // You might want to save the token to localStorage/sessionStorage here
       navigate('/'); // Redirect to homepage upon successful login
     } catch (error) {
       console.error('Error during login:', error);
@@ -61,28 +51,55 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <Container component="main" maxWidth="xs">
+      <Paper elevation={3} sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
+        <Typography component="h1" variant="h5">
+          Login
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Login
+          </Button>
+          <Button
+            fullWidth
+            variant="text"
+            onClick={() => navigate('/register')}
+            sx={{ mb: 2 }}
+          >
+            Don't have an account? Register
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
   );
 }
 
