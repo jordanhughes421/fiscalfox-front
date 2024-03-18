@@ -14,6 +14,7 @@ const RevenueFetcher = () => {
   });
 
   useEffect(() => {
+    console.log('revenue fetcher');
     const fetchRevenuesAndProjects = async () => {
       const token = localStorage.getItem('token');
 
