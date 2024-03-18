@@ -9,6 +9,7 @@ const AddExpense = ({ open, handleClose }) => {
     const [expenseData, setExpenseData] = useState({
       expenseType: '',
       project: '',
+      description: '',
       category: '',
       date: '',
       amount: '',
@@ -19,9 +20,10 @@ const AddExpense = ({ open, handleClose }) => {
       employee: ''
     });
   const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com'; // Make sure to replace this with your actual backend URL
-  
+
   useEffect(() => {
     const fetchProjectsAssetsAndEmployees = async () => {
+      console.log('add expense');
       const token = localStorage.getItem('token');
 
       try {
@@ -84,8 +86,12 @@ const AddExpense = ({ open, handleClose }) => {
         date: new Date(expenseData.date).toISOString() // Format the date to ISO string if necessary
     };
 
+    // Remove asset and employee fields if they are empty to prevent casting errors
+    if (!formattedExpense.asset) delete formattedExpense.asset;
+    if (!formattedExpense.employee) delete formattedExpense.employee;
+
     try {
-        const response = await fetch(`${baseUrl}/expenses`, { // Ensure the endpoint matches your backend API route
+        const response = await fetch(`${baseUrl}/expense`, { // Ensure the endpoint matches your backend API route
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +101,7 @@ const AddExpense = ({ open, handleClose }) => {
         });
 
         if (response.ok) {
-            const addedExpense = await response.json();
+            //const addedExpense = await response.json();
             // Assuming there's a way to update the parent component or context that holds the expenses state
             // For example, if this component was passed a method to update the expenses in the parent component:
             // updateExpenses([...expenses, addedExpense]);
@@ -235,6 +241,18 @@ const CommonFields = ({ projects, expenseData, handleChange }) => (
         ))}
       </Select>
     </FormControl>
+    <TextField
+      margin="dense"
+      id="description"
+      name="description"
+      label="Description"
+      type="text"
+      fullWidth
+      variant="outlined"
+      value={expenseData.description}
+      onChange={handleChange}
+      required
+    />
     <TextField
       margin="dense"
       id="category"
