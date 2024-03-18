@@ -5,30 +5,50 @@ const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.co
 const ProjectFetcher = () => {
   const [projects, setProjects] = useState([]);
   const [newProjectName, setNewProjectName] = useState('');
+  const [expenses, setExpenses] = useState([]);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const userID = localStorage.getItem('fiscalfoxID');
+    const fetchExpensesAndProjects = async () => {
       const token = localStorage.getItem('token');
+
       try {
-        const response = await fetch(`${baseUrl}/projects`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Assuming the token is stored under this key
-          }
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setProjects(data);
+        const [expensesResponse, projectsResponse] = await Promise.all([
+          fetch(`${baseUrl}/expense`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            }
+          }),
+          fetch(`${baseUrl}/projects`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            }
+          })
+        ]);
+
+        if (expensesResponse.ok && projectsResponse.ok) {
+          const expensesData = await expensesResponse.json();
+          const projectsData = await projectsResponse.json();
+          // Assuming expensesData and projectsData are arrays
+          setExpenses(expensesData);
+          // Relate projects with their expenses
+          const projectsWithExpenses = projectsData.map(project => {
+            return {
+              ...project,
+              expenses: expensesData.filter(expense => project.expenses.includes(expense._id)),
+            };
+          });
+          setProjects(projectsWithExpenses);
         } else {
-          throw new Error(data.message || "Failed to fetch projects");
+          throw new Error("Failed to fetch expenses or projects");
         }
       } catch (error) {
-        console.error("Error fetching projects:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchProjects();
+    fetchExpensesAndProjects();
   }, []);
 
   const handleAddProject = async (e) => {
@@ -46,7 +66,7 @@ const ProjectFetcher = () => {
       });
       const newProject = await response.json();
       if (response.ok) {
-        setProjects([...projects, newProject]);
+        setProjects([...projects, { ...newProject, expenses: [] }]);
         setNewProjectName(''); // Reset the input field after successful addition
       } else {
         throw new Error(newProject.message || "Failed to add project");
@@ -59,14 +79,16 @@ const ProjectFetcher = () => {
   return (
     <div>
       <h2>My Projects</h2>
-
       {projects.map(project => (
-        <ul key={project._id}>
-          <li>{project.name}</li>
-          <li>{project.expenses}</li>
-        </ul>
-          
-          
+        <div key={project._id}>
+          <h3>{project.name}</h3>
+          <h5>Project Expenses</h5>
+          <ul>
+            {project.expenses.map(expense => (
+              <li key={expense._id}>{expense.description}: ${expense.amount}</li>
+            ))}
+          </ul>
+        </div>
       ))}
       <form onSubmit={handleAddProject}>
         <input
