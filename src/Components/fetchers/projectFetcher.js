@@ -43,12 +43,24 @@ const ProjectFetcher = () => {
           
           // Combining projects with their expenses and revenues
           const projectsWithExpensesAndRevenues = projectsData.map(project => {
+            const projectExpenses = expensesData.filter(expense => project.expenses.includes(expense._id));
+            const projectRevenues = revenuesData.filter(revenue => project._id === revenue.project);
+
+            // Calculating total expenses and revenues for the project
+            const totalExpenses = projectExpenses.reduce((acc, curr) => acc + curr.amount, 0);
+            const totalRevenues = projectRevenues.reduce((acc, curr) => acc + curr.amount, 0);
+
+            // Calculating profit for the project
+            const profit = totalRevenues - totalExpenses;
+
             return {
               ...project,
-              expenses: expensesData.filter(expense => project.expenses.includes(expense._id)),
-              revenues: revenuesData.filter(revenue => project._id === revenue.project), // Relating revenues to projects
+              expenses: projectExpenses,
+              revenues: projectRevenues,
+              profit, // Adding profit to the project object
             };
           });
+
           setProjects(projectsWithExpensesAndRevenues);
         } else {
           throw new Error("Failed to fetch expenses, revenues, or projects");
@@ -105,6 +117,7 @@ const ProjectFetcher = () => {
               <li key={revenue._id}>{revenue.description}: ${revenue.amount}</li>
             ))}
           </ul>
+          <h5>Profit: ${project.profit}</h5> {/* Displaying profit */}
         </div>
       ))}
       <form onSubmit={handleAddProject}>
