@@ -7,6 +7,7 @@ const AddExpense = ({ open, handleClose }) => {
     const [assets, setAssets] = useState([]); // Placeholder for assets state
     const [employees, setEmployees] = useState([]); // Placeholder for employees state
     const [isVehicle, setIsVehicle] = useState(false);
+    const [isConsumable, setIsConsumable] = useState(false);
     const [vehicleUsageRate, setVehicleUsageRate] = useState(null);
     const [expenseData, setExpenseData] = useState({
       expenseType: '',
@@ -34,6 +35,7 @@ const AddExpense = ({ open, handleClose }) => {
     } else if (fieldName === "unitPrice") {
         unitPrice = newValue;
     }
+    
     const mpg = vehicleUsageRate;
 
     if (!quantity || !unitPrice || !mpg) {
@@ -46,6 +48,32 @@ const AddExpense = ({ open, handleClose }) => {
 
     const gallonsUsed = milesDriven / usageRate;
     const amount = gallonsUsed * pricePerGallon;
+
+    // Update the expenseData state with the calculated amount
+    setExpenseData(prevData => ({
+        ...prevData,
+        amount: amount.toFixed(2) // Keeping two decimal places for currency formatting
+    }));
+  };
+
+  const calculateAndSetAmountConsumable = (newValue, fieldName) => {
+    // Ensure all necessary values are numbers and present before calculating
+    let { quantity, unitPrice } = expenseData;
+    if (fieldName === "quantity") {
+        quantity = newValue;
+    } else if (fieldName === "unitPrice") {
+        unitPrice = newValue;
+    }
+    
+    const mpg = vehicleUsageRate;
+
+    if (!quantity || !unitPrice ) {
+        return; // Exit if any value is missing or zero
+    }
+
+    const unitsUsed = parseFloat(quantity);
+    const pricePerUnit = parseFloat(unitPrice);
+    const amount = unitsUsed * pricePerUnit;
 
     // Update the expenseData state with the calculated amount
     setExpenseData(prevData => ({
@@ -101,28 +129,57 @@ const AddExpense = ({ open, handleClose }) => {
     fetchProjectsAssetsAndEmployees();
   }, []);
 
+  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // When an asset is selected, check if it's a vehicle
-    if (name === "asset") {
-      const selectedAsset = assets.find(asset => asset._id === value);
-      const isVehicleSelected = selectedAsset && selectedAsset.description === "vehicle";
-      setIsVehicle(isVehicleSelected);
 
-      // If a vehicle is selected, store its MPG (usage rate), else reset it
-      setVehicleUsageRate(isVehicleSelected ? selectedAsset.usageRate : null);
+    // When an asset is selected, check if it's a vehicle or a consumable based on the description
+    if (name === "asset") {
+        const selectedAsset = assets.find(asset => asset._id === value);
+        const isVehicleSelected = selectedAsset && selectedAsset.description === "vehicle";
+        const isConsumableSelected = selectedAsset && selectedAsset.description.startsWith("consumable");
+
+        setIsVehicle(isVehicleSelected);
+        setIsConsumable(isConsumableSelected);
+
+        // If a vehicle is selected, store its MPG (usage rate), else reset it
+        setVehicleUsageRate(isVehicleSelected ? selectedAsset.usageRate : null);
+
+
+        // Handle consumable asset selection
+        if (isConsumableSelected) {
+            // Extract the unit from the description, e.g., "consumable, unit"
+            const [, unit] = selectedAsset.description.split(",");
+            const unitPrice = selectedAsset.value / selectedAsset.usageRate
+            setExpenseData(prevData => ({
+                ...prevData,
+                unitPrice: unitPrice,
+                unit: unit // Update the unit based on the asset's description
+            }));
+        } else if (!isVehicleSelected) {
+            // Reset unit if not a vehicle and not a consumable
+            setExpenseData(prevData => ({
+                ...prevData,
+                unit: ''
+            }));
+        }
     }
 
     setExpenseData(prevData => ({
-      ...prevData,
-      [name]: value
+        ...prevData,
+        [name]: value
     }));
 
     // Immediately calculate and update amount if any relevant field changes and it's a vehicle expense
     if (isVehicle && (name === "quantity" || name === "unitPrice" || name === "asset")) {
-      calculateAndSetAmount(value, name);
+        calculateAndSetAmount(value, name);
     }
-  };
+    if (isConsumable && (name === "quantity" || name === "unitPrice" || name === "asset")) {
+      calculateAndSetAmountConsumable(value, name);
+  }
+};
+
 
   const CommonFields = ({ projects, expenseData }) => (
     <>
@@ -334,7 +391,7 @@ return (
             onChange={handleChange}
             required
             InputProps={{
-                readOnly: isVehicle, // Make amount field read-only if an asset is a vehicle
+                readOnly: isVehicle || isConsumable, // Make amount field read-only if an asset is a vehicle
             }}
           />
 
@@ -358,7 +415,7 @@ return (
               margin="dense"
               id="quantity"
               name="quantity"
-              label={isVehicle ? "Miles Driven" : "Quantity"}
+              label={isVehicle ? "Miles Driven" : isConsumable ? "Units Used" : "Quantity"}
               type="number"
               fullWidth
               variant="outlined"
@@ -366,11 +423,12 @@ return (
               onChange={handleChange}
               required
             />
+            
             <TextField
                 margin="dense"
                 id="unitPrice"
                 name="unitPrice"
-                label={isVehicle ? "$/Gallon of Gas" : "Unit Price"}
+                label={isVehicle ? "$/Gallon of Gas" : isConsumable ? "$/Unit" : "Unit Price"}
                 type="number"
                 fullWidth
                 variant="outlined"
@@ -387,6 +445,21 @@ return (
                     type="text"
                     fullWidth
                     value="Miles" // For vehicles, set this statically to "Miles"
+                    variant="outlined"
+                    InputProps={{
+                        readOnly: true, // Make the field read-only if it's a vehicle
+                    }}
+                />
+            )}
+            {isConsumable && (
+                <TextField
+                    margin="dense"
+                    id="unit"
+                    name="unit"
+                    label="Unit"
+                    type="text"
+                    fullWidth
+                    value={expenseData.unit} // For vehicles, set this statically to "Miles"
                     variant="outlined"
                     InputProps={{
                         readOnly: true, // Make the field read-only if it's a vehicle
