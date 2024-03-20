@@ -5,7 +5,8 @@ import ProjectFetcher from '../fetchers/projectFetcher';
 import AddProject from '../AddProject/AddProject';
 import AddExpense from '../AddExpense/AddExpense';
 import AddRevenue from '../AddRevenue/AddRevenue';
-import DataDeleter from '../DataDeleter/DataDeleter'; // Make sure to import the DataDeleter component
+import DataDeleter from '../DataDeleter/DataDeleter';
+import DataEditor from '../DataEditor/DataEditor';
 import AddAsset from '../AddAsset/AddAsset';
 import AddVehicleAsset from '../AddAsset/AddVehicleAsset';
 import MainAssetDialogue from '../AddAsset/MainAssetDialogue';
@@ -22,6 +23,7 @@ function HomePage() {
     const [openAddAsset, setOpenAddAsset] = useState(false);
     const [openAddVehicleAsset, setOpenAddVehicleAsset] = useState(false);
     const [openMainAssetDialog, setOpenMainAssetDialog] = useState(false);
+    const [openDataEditor, setOpenDataEditor] = useState(false);
 
 
     // Handlers for AddProject, AddExpense, and AddRevenue
@@ -31,6 +33,9 @@ function HomePage() {
     const handleCloseAddExpense = () => setOpenAddExpense(false);
     const handleOpenAddRevenue = () => setOpenAddRevenue(true);
     const handleCloseAddRevenue = () => setOpenAddRevenue(false);
+    const handleOpenDataEditor = () => setOpenDataEditor(true);
+    const handleCloseDataEditor = () => setOpenDataEditor(false);
+
     
     // Handlers for DataDeleter
     const handleOpenDataDeleter = () => setOpenDataDeleter(true);
@@ -70,6 +75,9 @@ function HomePage() {
                     <Button variant="contained" color="info" onClick={handleOpenMainAssetDialog} style={{ marginLeft: '10px' }}>
                         Add Asset
                     </Button>
+                    <Button variant="contained" color="warning" onClick={handleOpenDataEditor} style={{ marginLeft: '10px' }}>
+                        Edit Data
+                    </Button>
                     <Button variant="contained" color="error" onClick={handleOpenDataDeleter} style={{ marginLeft: '10px' }}>
                         Delete Data
                     </Button>
@@ -85,6 +93,7 @@ function HomePage() {
                     <AddAsset open={openAddAsset} handleClose={handleCloseAddAssetDialog} />
                     <AddVehicleAsset open={openAddVehicleAsset} handleClose={handleCloseAddVehicleAssetDialog} />
                     <DataDeleter open={openDataDeleter} handleClose={handleCloseDataDeleter} />
+                    <DataEditor open={openDataEditor} handleClose={handleCloseDataEditor} />
                 </>
             )}
         </Box>
