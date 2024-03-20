@@ -1,70 +1,44 @@
-# Getting Started with Create React App
+FiscalFox Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the FiscalFox Frontend repository! This React application is designed to offer intuitive financial tracking and management tools. Below you'll find a guide on how the project is structured, the technologies used, and how you can get started with development.
+Technologies and Libraries
 
-## Available Scripts
+    React: The core framework used for building the UI.
+    Material-UI: Provides a wide range of components for a sleek, responsive design.
+    react-router-dom: Manages routing for a single-page application experience.
+    Emotion: Used for writing CSS styles in JavaScript.
+    Testing Libraries: Jest, @testing-library/react, and @testing-library/user-event for robust frontend testing.
 
-In the project directory, you can run:
+Getting Started 
 
-### `npm start`
+To get started with development, follow these steps to set up your environment:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+    Clone the repository: Download the code to your local machine.
+    Install dependencies: Run npm install to install all required dependencies for the project.
+    Local Development:
+        For local development with hot reloading and real-time changes, use npm run local. This leverages react-scripts start to serve the app in development mode with built-in hot reloading.
+    Prod-like Testing:
+        To mimic a production environment locally, first build the application using npm run build, which compiles the React app into static files for production. Then, serve the production build with npm start, which serves the app with a static server. This approach is useful for testing the production build of your application locally before deployment.
+    Deployment:
+        For deployment, particularly when deploying to platforms like Heroku, the heroku-postbuild script is configured to automatically run npm run build as part of the deployment process. This ensures that the latest version of your application is built and ready for production.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Project Structure
 
-### `npm test`
+The project follows a modular structure to keep components manageable and reusable:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    src/App.js: The main application component that ties everything together.
 
-### `npm run build`
+    src/index.js: The entry point for the application, where the React app is rendered into the DOM.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    Components: This directory contains all the React components used in the application, structured as follows:
+        AddAsset, AddExpense, AddProject, AddRevenue: Components for adding new entries to their respective categories.
+        DataDeleter: Provides functionality for deleting data entries.
+        DataEditor: Allows for the editing of existing data entries.
+        HomePage: The landing page of the application.
+        Navbar: A navigation bar component for easy access to different parts of the application.
+        auth: Contains components and utilities related to authentication.
+        fetchers: Utility functions for making API requests and managing data fetch operations.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Contributing
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+We welcome contributions to the FiscalFox Frontend! Please feel free to submit issues, pull requests, or suggestions to improve the codebase or add new features.
