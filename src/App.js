@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -11,6 +11,22 @@ import { AuthProvider } from './Components/auth/AuthContext';
 import Navbar from './Components/Navbar/navbar';
 
 function App() {
+  const authenticate = () => new Promise((resolve) => setTimeout(resolve, 2000)) // 2 seconds
+
+  useEffect(() => {
+    authenticate().then(() => {
+      const ele = document.getElementById('ipl-progress-indicator')
+      if (ele) {
+        // fade out
+        ele.classList.add('available')
+        setTimeout(() => {
+          // remove from DOM
+          ele.outerHTML = ''
+        }, 2000)
+      }
+    })
+  }, [])
+  
   return (
     <AuthProvider>
       <BrowserRouter>
