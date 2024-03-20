@@ -3,7 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl,
 
 
 const entityFields = {
-    asset: ["name", "description", "purchaseDate", "value", "depreciationRate", "usageRate"],
+    asset: ["name", "purchaseDate", "value", "depreciationRate", "usageRate"],
     employee: ["firstName", "lastName", "position", "hourlyRate"],
     expense: ["description", "amount", "category", "date", "quantity", "unit", "unitPrice"],
     project: ["name", "description", "startDate", "endDate"],
@@ -64,8 +64,21 @@ const DataEditor = ({ open, handleClose }) => {
             acc[field] = selected ? selected[field] : '';
             return acc;
         }, {});
+
+        const formattedEntityData = {};
+
+        Object.keys(initialEntityData || {}).forEach(key => {
+            if (entityFields[entityType].includes(key) && key.toLowerCase().includes('date') && selected[key]) {
+                // Extract the date part from the ISO string
+                const formattedDate = selected[key].split('T')[0];
+                formattedEntityData[key] = formattedDate;
+            } else {
+                // For non-date fields or null dates
+                formattedEntityData[key] = selected[key];
+            }
+        });
         
-        setSelectedEntityData(initialEntityData);
+        setSelectedEntityData(formattedEntityData);
     }, [selectedEntityId, entityType, entities]);
 
     const handleEntityDataChange = (e) => {
