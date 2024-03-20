@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Box, Button } from '@mui/material';
+import { NavLink } from "react-router-dom";
+import { Box, Button, Typography, Grid, Paper } from '@mui/material';
 import { useAuth } from '../auth/AuthContext';
 import ProjectFetcher from '../fetchers/projectFetcher';
 import AddProject from '../AddProject/AddProject';
@@ -108,6 +109,54 @@ function HomePage() {
                     <DataEditor open={openDataEditor} handleClose={handleCloseDataEditor} />
                 </>
             )}
+            {!isLoggedIn && (
+                <Box sx={{ flexGrow: 1 }}>
+                    <Typography variant="h2" component="h1" gutterBottom align="center" sx={{ marginTop: '20px' }}>
+                        Welcome to Fiscal Fox
+                    </Typography>
+                    <Box sx={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                        <Button component={NavLink} variant="contained" color="primary" sx={{ marginRight: '10px' }} to='/register'>
+                            Sign Up
+                        </Button>
+                        <Button component={NavLink} variant="outlined" color="primary" to='/login'>
+                            Log In
+                        </Button>
+                    </Box>
+                    <Grid container spacing={2} sx={{ marginTop: '20px', padding: '0 20px' }}>
+                        <Grid item xs={12} md={4}>
+                            <Paper elevation={3} sx={{ padding: '20px' }}>
+                                <Typography variant="h5" component="h3" gutterBottom>
+                                    Organize Your Projects
+                                </Typography>
+                                <Typography>
+                                    Keep all your projects, expenses, and revenue streams organized in one place.
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Paper elevation={3} sx={{ padding: '20px' }}>
+                                <Typography variant="h5" component="h3" gutterBottom>
+                                    Track Your Assets
+                                </Typography>
+                                <Typography>
+                                    Manage your assets efficiently with our comprehensive asset tracking system.
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Paper elevation={3} sx={{ padding: '20px' }}>
+                                <Typography variant="h5" component="h3" gutterBottom>
+                                    Insightful Reports
+                                </Typography>
+                                <Typography>
+                                    Gain insights into your financial health with detailed reports and analytics.
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                    </Grid>
+                </Box> 
+            )}
+
         </Box>
     );
 }
