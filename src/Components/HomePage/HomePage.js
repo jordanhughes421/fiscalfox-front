@@ -9,6 +9,7 @@ import DataDeleter from '../DataDeleter/DataDeleter';
 import DataEditor from '../DataEditor/DataEditor';
 import AddAsset from '../AddAsset/AddAsset';
 import AddVehicleAsset from '../AddAsset/AddVehicleAsset';
+import AddConsumableAsset from '../AddAsset/AddConsumableAsset';
 import MainAssetDialogue from '../AddAsset/MainAssetDialogue';
 
 function HomePage() {
@@ -16,7 +17,7 @@ function HomePage() {
     const [openAddProject, setOpenAddProject] = useState(false);
     const [openAddExpense, setOpenAddExpense] = useState(false);
     const [openAddRevenue, setOpenAddRevenue] = useState(false);
-    const [openDataDeleter, setOpenDataDeleter] = useState(false); // State for DataDeleter dialog
+    const [openDataDeleter, setOpenDataDeleter] = useState(false); 
     const [projects, setProjects] = useState([]);
     const [assets, setAssets] = useState([]);
     const [employees, setEmployees] = useState([]);
@@ -24,6 +25,7 @@ function HomePage() {
     const [openAddVehicleAsset, setOpenAddVehicleAsset] = useState(false);
     const [openMainAssetDialog, setOpenMainAssetDialog] = useState(false);
     const [openDataEditor, setOpenDataEditor] = useState(false);
+    const [openAddConsumableAsset, setOpenAddConsumableAsset] = useState(false);
 
 
     // Handlers for AddProject, AddExpense, and AddRevenue
@@ -58,6 +60,14 @@ function HomePage() {
         setOpenAddVehicleAsset(true);
     };
 
+    const handleOpenAddConsumableAsset = () => {
+        setOpenMainAssetDialog(false);
+        setOpenAddConsumableAsset(true);
+    };
+    const handleCloseAddConsumableAssetDialog = () => setOpenAddConsumableAsset(false);
+
+    
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             {isLoggedIn && (
@@ -89,9 +99,11 @@ function HomePage() {
                         handleClose={handleCloseMainAssetDialog}
                         handleOpenAddAsset={handleOpenAddAsset}
                         handleOpenAddVehicleAsset={handleOpenAddVehicleAsset}
+                        handleOpenAddConsumableAsset={handleOpenAddConsumableAsset} // Add this prop
                     />
                     <AddAsset open={openAddAsset} handleClose={handleCloseAddAssetDialog} />
                     <AddVehicleAsset open={openAddVehicleAsset} handleClose={handleCloseAddVehicleAssetDialog} />
+                    <AddConsumableAsset open={openAddConsumableAsset} handleClose={handleCloseAddConsumableAssetDialog} />
                     <DataDeleter open={openDataDeleter} handleClose={handleCloseDataDeleter} />
                     <DataEditor open={openDataEditor} handleClose={handleCloseDataEditor} />
                 </>
