@@ -65,7 +65,6 @@ const AddExpense = ({ open, handleClose }) => {
         unitPrice = newValue;
     }
     
-    const mpg = vehicleUsageRate;
 
     if (!quantity || !unitPrice ) {
         return; // Exit if any value is missing or zero
