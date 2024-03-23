@@ -18,7 +18,7 @@ node_modules/
 /.vscode
 *.swp
 *~
-.DS_Store
+.DS_Store 
 
 # Optional npm cache directory
 .npm
@@ -31,3 +31,4 @@ node_modules/
 .Trashes
 node_modules
 package-lock.json
+.DS_Store
