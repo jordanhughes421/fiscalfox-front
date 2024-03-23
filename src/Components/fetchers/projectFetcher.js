@@ -1,70 +1,87 @@
 import React, { useState, useEffect } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  List,
+  ListItem,
+  ListItemText,
+  Container
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import DataEditor from '../DataEditor/DataEditor';
+import DataDeleter from '../DataDeleter/DataDeleter';
 
 const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
 
 const ProjectFetcher = () => {
   const [projects, setProjects] = useState([]);
-  const [newProjectName, setNewProjectName] = useState('');
-  const [expenses, setExpenses] = useState([]);
-  const [revenues, setRevenues] = useState([]); // New state for storing revenues
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentDetails, setCurrentDetails] = useState({ expenses: [], revenues: [] });
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState('');
 
   useEffect(() => {
     const fetchProjectsExpensesAndRevenues = async () => {
-      console.log('project fetcher');
       const token = localStorage.getItem('token');
-
       try {
         const [expensesResponse, projectsResponse, revenuesResponse] = await Promise.all([
           fetch(`${baseUrl}/expense`, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`,
-            }
+            },
           }),
           fetch(`${baseUrl}/projects`, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`,
-            }
+            },
           }),
-          fetch(`${baseUrl}/revenue`, { // Fetching revenue data
+          fetch(`${baseUrl}/revenue`, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`,
-            }
-          })
+            },
+          }),
         ]);
 
         if (expensesResponse.ok && projectsResponse.ok && revenuesResponse.ok) {
           const expensesData = await expensesResponse.json();
           const projectsData = await projectsResponse.json();
-          const revenuesData = await revenuesResponse.json(); // Getting revenues data
-          setExpenses(expensesData);
-          setRevenues(revenuesData); // Setting the revenues state
-          
-          // Combining projects with their expenses and revenues
+          const revenuesData = await revenuesResponse.json();
+
           const projectsWithExpensesAndRevenues = projectsData.map(project => {
             const projectExpenses = expensesData.filter(expense => project.expenses.includes(expense._id));
             const projectRevenues = revenuesData.filter(revenue => project._id === revenue.project);
-
-            // Calculating total expenses and revenues for the project
             const totalExpenses = projectExpenses.reduce((acc, curr) => acc + curr.amount, 0);
             const totalRevenues = projectRevenues.reduce((acc, curr) => acc + curr.amount, 0);
-
-            // Calculating profit for the project
             const profit = totalRevenues - totalExpenses;
 
             return {
               ...project,
               expenses: projectExpenses,
               revenues: projectRevenues,
-              profit, // Adding profit to the project object
+              profit,
+              totalExpenses,
+              totalRevenues,
             };
           });
 
           setProjects(projectsWithExpensesAndRevenues);
         } else {
-          throw new Error("Failed to fetch expenses, revenues, or projects");
+          throw new Error("Failed to fetch data");
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -74,64 +91,110 @@ const ProjectFetcher = () => {
     fetchProjectsExpensesAndRevenues();
   }, []);
 
-  const handleAddProject = async (e) => {
-    e.preventDefault();
-    const userID = localStorage.getItem('fiscalfoxID');
-    const token = localStorage.getItem('token');
-    try {
-      const response = await fetch(`${baseUrl}/projects`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name: newProjectName, user: userID }), // Adjusted to match expected user ID format
-      });
-      if (response.ok) {
-        const newProject = await response.json();
-        setProjects([...projects, { ...newProject, expenses: [], revenues: [] }]);
-        setNewProjectName(''); // Reset the input field after successful addition
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to add project");
-      }
-    } catch (error) {
-      console.error("Error adding project:", error.message);
-    }
+  const handleOpenModal = (project) => {
+    setCurrentDetails({ expenses: project.expenses, revenues: project.revenues });
+    setModalOpen(true);
   };
 
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleEditOpen = (project) => {
+    setSelectedProject(project);
+    setEditModalOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setEditModalOpen(false);
+  };
+
+  const handleDeleteOpen = (projectId) => {
+    setSelectedProjectId(projectId);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteClose = () => {
+    setDeleteModalOpen(false);
+  };
+
+  // const refreshProjects = () => {
+  //   fetchProjectsExpensesAndRevenues();
+  // };
+
   return (
-    <div>
-      <h2>My Projects</h2>
-      {projects.map(project => (
-        <div key={project._id}>
-          <h3>{project.name}</h3>
-          <h5>Expenses:</h5>
-          <ul>
-            {project.expenses.map(expense => (
-              <li key={expense._id}>{expense.description}: ${expense.amount}</li>
+    <>
+      <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
+        <TableContainer component={Paper} sx={{ maxWidth: '80%', margin: 'auto', overflowX: 'auto' }}>
+          <Table sx={{ minWidth: 650 }} aria-label="projects table">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: 'bold' }}>Project Name</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'bold' }}>Total Expense</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'bold' }}>Total Revenue</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'bold' }}>Profit</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'bold' }}>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {projects.map((project) => (
+                <TableRow key={project._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell component="th" scope="row">{project.name}</TableCell>
+                  <TableCell align="right">
+                    ${project.totalExpenses.toFixed(2)}
+                    <Button variant="outlined" sx={{ ml: 2 }} onClick={() => handleOpenModal(project)}>
+                      View All
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right">${project.totalRevenues.toFixed(2)}</TableCell>
+                  <TableCell align="right">${project.profit.toFixed(2)}</TableCell>
+                  <TableCell align="right">
+                    <Button onClick={() => handleEditOpen(project)}>
+                      <EditIcon />
+                    </Button>
+                    <Button onClick={() => handleDeleteOpen(project._id)}>
+                      <DeleteIcon />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
+
+      <Dialog open={modalOpen} onClose={handleCloseModal} fullWidth maxWidth="sm">
+        <DialogTitle>Details</DialogTitle>
+        <DialogContent>
+          <List>
+            {currentDetails.expenses.map((expense) => (
+              <ListItem key={expense._id}>
+                <ListItemText primary={`${expense.description}: $${expense.amount}`} />
+              </ListItem>
             ))}
-          </ul>
-          <h5>Revenues:</h5>
-          <ul>
-            {project.revenues.map(revenue => (
-              <li key={revenue._id}>{revenue.description}: ${revenue.amount}</li>
-            ))}
-          </ul>
-          <h5>Profit: ${project.profit}</h5> {/* Displaying profit */}
-        </div>
-      ))}
-      <form onSubmit={handleAddProject}>
-        <input
-          type="text"
-          value={newProjectName}
-          onChange={e => setNewProjectName(e.target.value)}
-          placeholder="New Project Name"
-          required
-        />
-        <button type="submit">Add Project</button>
-      </form>
-    </div>
+          </List>
+        </DialogContent>
+        <Button onClick={handleCloseModal} color="primary">
+          Close
+        </Button>
+      </Dialog>
+
+      <DataEditor
+        open={editModalOpen}
+        handleClose={handleEditClose}
+        initialEntityType="project"
+        initialEntity={selectedProject}
+        // refreshEntities={refreshProjects}
+      />
+
+      <DataDeleter
+        open={deleteModalOpen}
+        handleClose={handleDeleteClose}
+        entityId={selectedProjectId}
+        entityType="project"
+        // refreshEntities={refreshProjects}
+      />
+    </>
   );
 };
 

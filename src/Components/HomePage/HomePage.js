@@ -86,12 +86,6 @@ function HomePage() {
                     <Button variant="contained" color="info" onClick={handleOpenMainAssetDialog} style={{ marginLeft: '10px' }}>
                         Add Asset
                     </Button>
-                    <Button variant="contained" color="warning" onClick={handleOpenDataEditor} style={{ marginLeft: '10px' }}>
-                        Edit Data
-                    </Button>
-                    <Button variant="contained" color="error" onClick={handleOpenDataDeleter} style={{ marginLeft: '10px' }}>
-                        Delete Data
-                    </Button>
                     <AddProject open={openAddProject} handleClose={handleCloseAddProject} setProjects={setProjects}/>
                     <AddExpense open={openAddExpense} handleClose={handleCloseAddExpense} projects={projects} assets={assets} employees={employees} />
                     <AddRevenue open={openAddRevenue} handleClose={handleCloseAddRevenue} projects={projects} />
