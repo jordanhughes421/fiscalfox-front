@@ -11,10 +11,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  List,
-  ListItem,
-  ListItemText,
-  Container
+  Container, 
+  Typography
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -29,67 +27,66 @@ const ProjectFetcher = () => {
   const [currentDetails, setCurrentDetails] = useState({ expenses: [], revenues: [] });
   const [selectedProject, setSelectedProject] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedProjectId, setSelectedProjectId] = useState('');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);const [selectedItemForDeletion, setSelectedItemForDeletion] = useState({ id: null, type: 'project' });
 
   useEffect(() => {
-    const fetchProjectsExpensesAndRevenues = async () => {
-      const token = localStorage.getItem('token');
-      try {
-        const [expensesResponse, projectsResponse, revenuesResponse] = await Promise.all([
-          fetch(`${baseUrl}/expense`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-          }),
-          fetch(`${baseUrl}/projects`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-          }),
-          fetch(`${baseUrl}/revenue`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-          }),
-        ]);
-
-        if (expensesResponse.ok && projectsResponse.ok && revenuesResponse.ok) {
-          const expensesData = await expensesResponse.json();
-          const projectsData = await projectsResponse.json();
-          const revenuesData = await revenuesResponse.json();
-
-          const projectsWithExpensesAndRevenues = projectsData.map(project => {
-            const projectExpenses = expensesData.filter(expense => project.expenses.includes(expense._id));
-            const projectRevenues = revenuesData.filter(revenue => project._id === revenue.project);
-            const totalExpenses = projectExpenses.reduce((acc, curr) => acc + curr.amount, 0);
-            const totalRevenues = projectRevenues.reduce((acc, curr) => acc + curr.amount, 0);
-            const profit = totalRevenues - totalExpenses;
-
-            return {
-              ...project,
-              expenses: projectExpenses,
-              revenues: projectRevenues,
-              profit,
-              totalExpenses,
-              totalRevenues,
-            };
-          });
-
-          setProjects(projectsWithExpensesAndRevenues);
-        } else {
-          throw new Error("Failed to fetch data");
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     fetchProjectsExpensesAndRevenues();
   }, []);
+
+  const fetchProjectsExpensesAndRevenues = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const [expensesResponse, projectsResponse, revenuesResponse] = await Promise.all([
+        fetch(`${baseUrl}/expense`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        }),
+        fetch(`${baseUrl}/projects`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        }),
+        fetch(`${baseUrl}/revenue`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        }),
+      ]);
+
+      if (expensesResponse.ok && projectsResponse.ok && revenuesResponse.ok) {
+        const expensesData = await expensesResponse.json();
+        const projectsData = await projectsResponse.json();
+        const revenuesData = await revenuesResponse.json();
+
+        const projectsWithExpensesAndRevenues = projectsData.map(project => {
+          const projectExpenses = expensesData.filter(expense => project.expenses.includes(expense._id));
+          const projectRevenues = revenuesData.filter(revenue => project._id === revenue.project);
+          const totalExpenses = projectExpenses.reduce((acc, curr) => acc + curr.amount, 0);
+          const totalRevenues = projectRevenues.reduce((acc, curr) => acc + curr.amount, 0);
+          const profit = totalRevenues - totalExpenses;
+
+          return {
+            ...project,
+            expenses: projectExpenses,
+            revenues: projectRevenues,
+            profit,
+            totalExpenses,
+            totalRevenues,
+          };
+        });
+
+        setProjects(projectsWithExpensesAndRevenues);
+      } else {
+        throw new Error("Failed to fetch data");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleOpenModal = (project) => {
     setCurrentDetails({ expenses: project.expenses, revenues: project.revenues });
@@ -109,8 +106,8 @@ const ProjectFetcher = () => {
     setEditModalOpen(false);
   };
 
-  const handleDeleteOpen = (projectId) => {
-    setSelectedProjectId(projectId);
+  const handleDeleteOpen = (item, type = 'project') => {
+    setSelectedItemForDeletion({ id: item._id, type });
     setDeleteModalOpen(true);
   };
 
@@ -118,9 +115,9 @@ const ProjectFetcher = () => {
     setDeleteModalOpen(false);
   };
 
-  // const refreshProjects = () => {
-  //   fetchProjectsExpensesAndRevenues();
-  // };
+  const refreshProjects = () => {
+    fetchProjectsExpensesAndRevenues();
+  };
 
   return (
     <>
@@ -152,7 +149,7 @@ const ProjectFetcher = () => {
                     <Button onClick={() => handleEditOpen(project)}>
                       <EditIcon />
                     </Button>
-                    <Button onClick={() => handleDeleteOpen(project._id)}>
+                    <Button onClick={() => handleDeleteOpen(project)}>
                       <DeleteIcon />
                     </Button>
                   </TableCell>
@@ -162,22 +159,45 @@ const ProjectFetcher = () => {
           </Table>
         </TableContainer>
       </Container>
-
-      <Dialog open={modalOpen} onClose={handleCloseModal} fullWidth maxWidth="sm">
-        <DialogTitle>Details</DialogTitle>
+      <Dialog open={modalOpen} onClose={handleCloseModal} fullWidth maxWidth="md">
+        <DialogTitle>Project Details</DialogTitle>
         <DialogContent>
-          <List>
-            {currentDetails.expenses.map((expense) => (
-              <ListItem key={expense._id}>
-                <ListItemText primary={`${expense.description}: $${expense.amount}`} />
-              </ListItem>
-            ))}
-          </List>
+          {/* Expenses Table */}
+          <Typography variant="h6" gutterBottom>Expenses</Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Description</TableCell>
+                  <TableCell align="right">Amount</TableCell>
+                  <TableCell align="right">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {currentDetails.expenses.map((expense) => (
+                  <TableRow key={expense._id}>
+                    <TableCell>{expense.description}</TableCell>
+                    <TableCell align="right">${expense.amount.toFixed(2)}</TableCell>
+                    <TableCell align="right">
+                      <Button onClick={() => handleDeleteOpen(expense, 'expense')}>
+                        <DeleteIcon />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </DialogContent>
-        <Button onClick={handleCloseModal} color="primary">
-          Close
-        </Button>
-      </Dialog>
+        <Button onClick={handleCloseModal} color="primary" style={{ margin: '20px' }}>
+        Close
+      </Button>
+    </Dialog>
+
+
+
+
+
 
       <DataEditor
         open={editModalOpen}
@@ -187,13 +207,15 @@ const ProjectFetcher = () => {
         // refreshEntities={refreshProjects}
       />
 
-      <DataDeleter
-        open={deleteModalOpen}
-        handleClose={handleDeleteClose}
-        entityId={selectedProjectId}
-        entityType="project"
-        // refreshEntities={refreshProjects}
-      />
+{deleteModalOpen && (
+        <DataDeleter
+          open={deleteModalOpen}
+          handleClose={handleDeleteClose}
+          itemId={selectedItemForDeletion.id}
+          itemType={selectedItemForDeletion.type}
+          refreshProjects={fetchProjectsExpensesAndRevenues}
+        />
+      )}
     </>
   );
 };
