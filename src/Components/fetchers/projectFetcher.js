@@ -28,6 +28,8 @@ const ProjectFetcher = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);const [selectedItemForDeletion, setSelectedItemForDeletion] = useState({ id: null, type: 'project' });
+  const [breakdownModalOpen, setBreakdownModalOpen] = useState(false);
+const [selectedProjectBreakdown, setSelectedProjectBreakdown] = useState(null);
 
   useEffect(() => {
     fetchProjectsExpensesAndRevenues();
@@ -115,6 +117,15 @@ const ProjectFetcher = () => {
     setDeleteModalOpen(false);
   };
 
+  const handleBreakdownOpen = (project) => {
+    setSelectedProjectBreakdown(project); // Assume the project object contains all necessary data
+    setBreakdownModalOpen(true);
+  };
+
+  const handleBreakdownClose = () => {
+    setBreakdownModalOpen(false);
+  };
+
   const refreshProjects = () => {
     fetchProjectsExpensesAndRevenues();
   };
@@ -151,6 +162,9 @@ const ProjectFetcher = () => {
                     </Button>
                     <Button onClick={() => handleDeleteOpen(project)}>
                       <DeleteIcon />
+                    </Button>
+                    <Button onClick={() => handleBreakdownOpen(project)}>
+                      View Breakdown
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -194,9 +208,35 @@ const ProjectFetcher = () => {
       </Button>
     </Dialog>
 
-
-
-
+    <Dialog open={breakdownModalOpen} onClose={handleBreakdownClose} fullWidth maxWidth="md">
+  <DialogTitle>Project Breakdown</DialogTitle>
+  <DialogContent>
+    {/* Example Table for Expenses, similar structure can be used for Revenues or other breakdown parts */}
+    <Typography variant="h6" gutterBottom>Expenses</Typography>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Description</TableCell>
+            <TableCell align="right">Amount</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {selectedProjectBreakdown?.expenses.map((expense) => (
+            <TableRow key={expense._id}>
+              <TableCell>{expense.description}</TableCell>
+              <TableCell align="right">${expense.amount.toFixed(2)}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    {/* Include similar tables for Revenues or other breakdown parts as needed */}
+  </DialogContent>
+  <Button onClick={handleBreakdownClose} color="primary" style={{ margin: '20px' }}>
+    Close
+  </Button>
+</Dialog>
 
 
       <DataEditor
@@ -204,7 +244,7 @@ const ProjectFetcher = () => {
         handleClose={handleEditClose}
         initialEntityType="project"
         initialEntity={selectedProject}
-        // refreshEntities={refreshProjects}
+        refreshProjects={fetchProjectsExpensesAndRevenues}
       />
 
 {deleteModalOpen && (
