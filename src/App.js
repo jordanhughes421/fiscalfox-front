@@ -20,8 +20,10 @@ function App() {
         // fade out
         ele.classList.add('available')
         setTimeout(() => {
-          // remove from DOM
-          ele.outerHTML = ''
+          // remove from DOM safely
+          if (ele.parentNode) {
+            ele.parentNode.removeChild(ele);
+          }
         }, 2000)
       }
     })
