@@ -15,8 +15,9 @@ const DataDeleter = ({ open, handleClose, itemId, itemType, refreshProjects }) =
 
                 if (!response.ok) throw new Error("Failed to delete the item");
 
-                refreshProjects(); // Refresh the list of projects or expenses
+                 // Refresh the list of projects or expenses
                 handleClose(); // Close the delete dialog
+                refreshProjects();
             } catch (error) {
                 console.error("Error deleting item:", error);
             }

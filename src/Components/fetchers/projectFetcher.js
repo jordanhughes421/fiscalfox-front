@@ -27,15 +27,16 @@ const ProjectFetcher = () => {
   const [currentDetails, setCurrentDetails] = useState({ expenses: [], revenues: [] });
   const [selectedProject, setSelectedProject] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);const [selectedItemForDeletion, setSelectedItemForDeletion] = useState({ id: null, type: 'project' });
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);const [selectedItemForDeletion, setSelectedItemForDeletion] = useState({ id: null, type: 'projects' });
   const [breakdownModalOpen, setBreakdownModalOpen] = useState(false);
-const [selectedProjectBreakdown, setSelectedProjectBreakdown] = useState(null);
+  const [selectedProjectBreakdown, setSelectedProjectBreakdown] = useState(null);
 
   useEffect(() => {
     fetchProjectsExpensesAndRevenues();
   }, []);
 
   const fetchProjectsExpensesAndRevenues = async () => {
+    console.log("fetchProjectsExpensesAndRevenues")
     const token = localStorage.getItem('token');
     try {
       const [expensesResponse, projectsResponse, revenuesResponse] = await Promise.all([
@@ -108,12 +109,15 @@ const [selectedProjectBreakdown, setSelectedProjectBreakdown] = useState(null);
     setEditModalOpen(false);
   };
 
-  const handleDeleteOpen = (item, type = 'project') => {
+  const handleDeleteOpen = (item, type = 'projects') => {
     setSelectedItemForDeletion({ id: item._id, type });
     setDeleteModalOpen(true);
   };
 
   const handleDeleteClose = () => {
+    if (modalOpen) {
+
+    };
     setDeleteModalOpen(false);
   };
 
@@ -206,6 +210,7 @@ const [selectedProjectBreakdown, setSelectedProjectBreakdown] = useState(null);
         <Button onClick={handleCloseModal} color="primary" style={{ margin: '20px' }}>
         Close
       </Button>
+      
     </Dialog>
 
     <Dialog open={breakdownModalOpen} onClose={handleBreakdownClose} fullWidth maxWidth="md">
