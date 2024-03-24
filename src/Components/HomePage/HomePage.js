@@ -67,7 +67,7 @@ function HomePage() {
     };
     const handleCloseAddConsumableAssetDialog = () => setOpenAddConsumableAsset(false);
 
-    
+
 
     return (
         <Box sx={{ flexGrow: 1 }}>

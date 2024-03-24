@@ -38,7 +38,6 @@ function Login() {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log(data);
       localStorage.setItem('token', data.token); // Assuming 'data.token' is your token
       localStorage.setItem('isLoggedIn', true);
       localStorage.setItem('fiscalfoxID', data.user.id);
