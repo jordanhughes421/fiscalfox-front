@@ -83,6 +83,17 @@ const ProjectFetcher = () => {
         });
 
         setProjects(projectsWithExpensesAndRevenues);
+
+        if (selectedProject){
+          // Find the updated project data from the projectsWithExpensesAndRevenues array
+          const updatedSelectedProject = projectsWithExpensesAndRevenues.find(project => project._id === selectedProject._id);
+          if (updatedSelectedProject) {
+            // Update currentDetails and selectedProjectBreakdown with the new data
+            setCurrentDetails({ expenses: updatedSelectedProject.expenses, revenues: updatedSelectedProject.revenues });
+            setSelectedProjectBreakdown(updatedSelectedProject);
+          }
+        };
+
       } else {
         throw new Error("Failed to fetch data");
       }
@@ -92,6 +103,7 @@ const ProjectFetcher = () => {
   };
 
   const handleOpenModal = (project) => {
+    setSelectedProject(project);
     setCurrentDetails({ expenses: project.expenses, revenues: project.revenues });
     setModalOpen(true);
   };
@@ -116,12 +128,13 @@ const ProjectFetcher = () => {
 
   const handleDeleteClose = () => {
     if (modalOpen) {
-
-    };
+      
+    }
     setDeleteModalOpen(false);
   };
 
   const handleBreakdownOpen = (project) => {
+    setSelectedProject(project);
     setSelectedProjectBreakdown(project); // Assume the project object contains all necessary data
     setBreakdownModalOpen(true);
   };

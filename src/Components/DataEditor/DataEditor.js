@@ -19,7 +19,7 @@ const endpointMappings = {
     // Extend this object as needed
 };
 
-const DataEditor = ({ open, handleClose }) => {
+const DataEditor = ({ open, handleClose, refreshProjects }) => {
     const [entityType, setEntityType] = useState('');
     const [entities, setEntities] = useState([]);
     const [selectedEntityId, setSelectedEntityId] = useState('');
@@ -106,8 +106,9 @@ const DataEditor = ({ open, handleClose }) => {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Failed to update entity");
             }
-
+            
             handleClose();
+            refreshProjects();
             // Refresh entities list or provide success feedback here
         } catch (error) {
             console.error("Error updating entity:", error);
