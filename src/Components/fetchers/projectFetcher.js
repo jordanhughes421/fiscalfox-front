@@ -316,6 +316,23 @@ const ProjectFetcher = () => {
         </TableBody>
       </Table>
     </TableContainer>
+    <Typography variant="h6" gutterBottom>Profit</Typography>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell></TableCell>
+            <TableCell align="right">Amount</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+            <TableRow>
+              <TableCell>Total</TableCell>
+              <TableCell align="right">${selectedProjectBreakdown?.profit.toFixed(2)}</TableCell>
+            </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
   </DialogContent>
   <Button onClick={handleBreakdownClose} color="primary" style={{ margin: '20px' }}>
     Close
