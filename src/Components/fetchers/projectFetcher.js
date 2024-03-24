@@ -250,6 +250,25 @@ const ProjectFetcher = () => {
       </Table>
     </TableContainer>
     {/* Include similar tables for Revenues or other breakdown parts as needed */}
+    <Typography variant="h6" gutterBottom>Revenues</Typography>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Description</TableCell>
+            <TableCell align="right">Amount</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {selectedProjectBreakdown?.revenues.map((revenue) => (
+            <TableRow key={revenue._id}>
+              <TableCell>{revenue.description}</TableCell>
+              <TableCell align="right">${revenue.amount.toFixed(2)}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   </DialogContent>
   <Button onClick={handleBreakdownClose} color="primary" style={{ margin: '20px' }}>
     Close
