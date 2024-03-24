@@ -23,7 +23,8 @@ const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.co
 
 const ProjectFetcher = () => {
   const [projects, setProjects] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [expenseModalOpen, setExpenseModalOpen] = useState(false);
+  const [revenueModalOpen, setRevenueModalOpen] = useState(false);
   const [currentDetails, setCurrentDetails] = useState({ expenses: [], revenues: [] });
   const [selectedProject, setSelectedProject] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -102,14 +103,24 @@ const ProjectFetcher = () => {
     }
   };
 
-  const handleOpenModal = (project) => {
+  const handleExpenseOpenModal = (project) => {
     setSelectedProject(project);
     setCurrentDetails({ expenses: project.expenses, revenues: project.revenues });
-    setModalOpen(true);
+    setExpenseModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
+  const handleExpenseCloseModal = () => {
+    setExpenseModalOpen(false);
+  };
+
+  const handleRevenueOpenModal = (project) => {
+    setSelectedProject(project);
+    setCurrentDetails({ expenses: project.expenses, revenues: project.revenues });
+    setRevenueModalOpen(true);
+  };
+
+  const handleRevenueCloseModal = () => {
+    setRevenueModalOpen(false);
   };
 
   const handleEditOpen = (project) => {
@@ -127,9 +138,6 @@ const ProjectFetcher = () => {
   };
 
   const handleDeleteClose = () => {
-    if (modalOpen) {
-      
-    }
     setDeleteModalOpen(false);
   };
 
@@ -167,11 +175,16 @@ const ProjectFetcher = () => {
                   <TableCell component="th" scope="row">{project.name}</TableCell>
                   <TableCell align="right">
                     ${project.totalExpenses.toFixed(2)}
-                    <Button variant="outlined" sx={{ ml: 2 }} onClick={() => handleOpenModal(project)}>
+                    <Button variant="outlined" sx={{ ml: 2 }} onClick={() => handleExpenseOpenModal(project)}>
                       View All
                     </Button>
                   </TableCell>
-                  <TableCell align="right">${project.totalRevenues.toFixed(2)}</TableCell>
+                  <TableCell align="right">${project.totalRevenues.toFixed(2)}
+                  <Button variant="outlined" sx={{ ml: 2 }} onClick={() => handleRevenueOpenModal(project)}>
+                      View All
+                    </Button>
+                  </TableCell>
+                  
                   <TableCell align="right">${project.profit.toFixed(2)}</TableCell>
                   <TableCell align="right">
                     <Button onClick={() => handleEditOpen(project)}>
@@ -190,7 +203,7 @@ const ProjectFetcher = () => {
           </Table>
         </TableContainer>
       </Container>
-      <Dialog open={modalOpen} onClose={handleCloseModal} fullWidth maxWidth="md">
+      <Dialog open={expenseModalOpen} onClose={handleExpenseCloseModal} fullWidth maxWidth="md">
         <DialogTitle>Project Details</DialogTitle>
         <DialogContent>
           {/* Expenses Table */}
@@ -220,10 +233,44 @@ const ProjectFetcher = () => {
             </Table>
           </TableContainer>
         </DialogContent>
-        <Button onClick={handleCloseModal} color="primary" style={{ margin: '20px' }}>
+        <Button onClick={handleExpenseCloseModal} color="primary" style={{ margin: '20px' }}>
         Close
       </Button>
-      
+    </Dialog>
+
+    <Dialog open={revenueModalOpen} onClose={handleRevenueCloseModal} fullWidth maxWidth="md">
+        <DialogTitle>Project Details</DialogTitle>
+        <DialogContent>
+          {/* Expenses Table */}
+          <Typography variant="h6" gutterBottom>Revenues</Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Description</TableCell>
+                  <TableCell align="right">Amount</TableCell>
+                  <TableCell align="right">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {currentDetails.revenues.map((revenue) => (
+                  <TableRow key={revenue._id}>
+                    <TableCell>{revenue.description}</TableCell>
+                    <TableCell align="right">${revenue.amount.toFixed(2)}</TableCell>
+                    <TableCell align="right">
+                      <Button onClick={() => handleDeleteOpen(revenue, 'revenue')}>
+                        <DeleteIcon />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </DialogContent>
+        <Button onClick={handleRevenueCloseModal} color="primary" style={{ margin: '20px' }}>
+        Close
+      </Button>
     </Dialog>
 
     <Dialog open={breakdownModalOpen} onClose={handleBreakdownClose} fullWidth maxWidth="md">
