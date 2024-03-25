@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
 
       if (isLocalLoggedIn && token) {
         try {
-          const response = await fetch(`${baseUrl}/validate-session`, { // Assuming a validate-session endpoint
+          const response = await fetch(`${baseUrl}/projects`, { // Assuming a validate-session endpoint
             method: 'GET', // Using GET instead of POST
             headers: {
               'Authorization': `Bearer ${token}`,
