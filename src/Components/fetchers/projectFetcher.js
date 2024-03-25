@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, Container, Typography, useMediaQuery, Card, CardContent, Grid
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, Container, Typography, useMediaQuery, Card, CardContent, Grid, Box
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -146,6 +146,12 @@ const ProjectFetcher = () => {
     fetchProjectsExpensesAndRevenues();
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A'; // Return 'N/A' if date is not provided
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
   // Rendering either Table or Cards based on screen size
   const renderProjects = () => {
     if (matches) {
@@ -156,7 +162,14 @@ const ProjectFetcher = () => {
             <Grid item xs={12} key={project._id}>
               <Card>
                 <CardContent>
-                  <Typography variant="h5">{project.name}</Typography>
+                  <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+                    <Typography variant="h5" component="div">{project.name}</Typography>
+                    <Box textAlign="right" flexShrink={0}>
+                      <Typography variant="caption" display="block" color="textSecondary">Project Creation Date: {formatDate(project.createdAt)}</Typography>
+                      {project.startDate && <Typography variant="caption" display="block" color="textSecondary">Start Date: {formatDate(project.startDate)}</Typography>}
+                      {project.endDate && <Typography variant="caption" display="block" color="textSecondary">End Date: {formatDate(project.endDate)}</Typography>}
+                    </Box>
+                  </Box>
                   <Typography>Total Expenses: ${project.totalExpenses.toFixed(2)}</Typography>
                   <Typography>Total Revenues: ${project.totalRevenues.toFixed(2)}</Typography>
                   <Typography>Profit: ${project.profit.toFixed(2)}</Typography>
@@ -298,7 +311,16 @@ const ProjectFetcher = () => {
     <Dialog open={breakdownModalOpen} onClose={handleBreakdownClose} fullWidth maxWidth="md">
   <DialogTitle>Project Breakdown</DialogTitle>
   <DialogContent>
+    <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+      <Typography variant="h5" component="div">{selectedProjectBreakdown?.name}</Typography>
+      <Box textAlign="right" flexShrink={0}>
+        <Typography variant="caption" display="block" color="textSecondary">Project Creation Date: {formatDate(selectedProjectBreakdown?.createdAt)}</Typography>
+        {selectedProjectBreakdown?.startDate && <Typography variant="caption" display="block" color="textSecondary">Start Date: {formatDate(selectedProjectBreakdown?.startDate)}</Typography>}
+        {selectedProjectBreakdown?.endDate && <Typography variant="caption" display="block" color="textSecondary">End Date: {formatDate(selectedProjectBreakdown?.endDate)}</Typography>}
+      </Box>
+    </Box>
     {/* Example Table for Expenses, similar structure can be used for Revenues or other breakdown parts */}
+    
     <Typography variant="h6" gutterBottom>Expenses</Typography>
     <TableContainer component={Paper}>
       <Table>
