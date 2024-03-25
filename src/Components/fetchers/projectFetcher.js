@@ -1,19 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Container, 
-  Typography
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, Container, Typography, useMediaQuery, Card, CardContent, Grid
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DataEditor from '../DataEditor/DataEditor';
@@ -31,6 +20,8 @@ const ProjectFetcher = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);const [selectedItemForDeletion, setSelectedItemForDeletion] = useState({ id: null, type: 'projects' });
   const [breakdownModalOpen, setBreakdownModalOpen] = useState(false);
   const [selectedProjectBreakdown, setSelectedProjectBreakdown] = useState(null);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     fetchProjectsExpensesAndRevenues();
@@ -155,9 +146,32 @@ const ProjectFetcher = () => {
     fetchProjectsExpensesAndRevenues();
   };
 
-  return (
-    <>
-      <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
+  // Rendering either Table or Cards based on screen size
+  const renderProjects = () => {
+    if (matches) {
+      // Mobile view with Cards
+      return (
+        <Grid container spacing={2}>
+          {projects.map((project) => (
+            <Grid item xs={12} key={project._id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h5">{project.name}</Typography>
+                  <Typography>Total Expenses: ${project.totalExpenses.toFixed(2)}</Typography>
+                  <Typography>Total Revenues: ${project.totalRevenues.toFixed(2)}</Typography>
+                  <Typography>Profit: ${project.profit.toFixed(2)}</Typography>
+                  <Button onClick={() => handleEditOpen(project)}><EditIcon /></Button>
+                  <Button onClick={() => handleDeleteOpen(project)}><DeleteIcon /></Button>
+                  <Button onClick={() => handleBreakdownOpen(project)}>View Breakdown</Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      );
+    } else {
+      // Desktop view with Table
+      return (
         <TableContainer component={Paper} sx={{ maxWidth: '80%', margin: 'auto', overflowX: 'auto' }}>
           <Table sx={{ minWidth: 650 }} aria-label="projects table">
             <TableHead>
@@ -202,6 +216,14 @@ const ProjectFetcher = () => {
             </TableBody>
           </Table>
         </TableContainer>
+      );
+    }
+  };
+
+  return (
+    <>
+      <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
+        {renderProjects()}
       </Container>
       <Dialog open={expenseModalOpen} onClose={handleExpenseCloseModal} fullWidth maxWidth="md">
         <DialogTitle>Project Details</DialogTitle>
