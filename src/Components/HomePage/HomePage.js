@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
-import { Box, Button, Typography, Grid, Paper } from '@mui/material';
+import { Box, Button, Typography, Grid, Paper, Card, CardContent, Container } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import { useAuth } from '../auth/AuthContext';
 import ProjectFetcher from '../fetchers/projectFetcher';
 import AddProject from '../AddProject/AddProject';
@@ -73,19 +77,88 @@ function HomePage() {
         <Box sx={{ flexGrow: 1 }}>
             {isLoggedIn && (
                 <>
+                    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
+                        <Card>
+                            <CardContent>
+                                <Grid container spacing={4} alignItems="center" justifyContent="center">
+                                    <Grid item xs={6}>
+                                        <Button
+                                            variant="contained"
+                                            fullWidth
+                                            onClick={handleOpenAddProject}
+                                            startIcon={<AddCircleOutlineIcon />}
+                                            sx={{
+                                                backgroundImage: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+                                                color: 'white',
+                                                ':hover': {
+                                                bgcolor: 'primary.dark', // Darken the button when hovered
+                                                boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+                                                },
+                                            }}
+                                            >
+                                            Add New Project
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Button
+                                            variant="contained"
+                                            fullWidth
+                                            onClick={handleOpenAddExpense}
+                                            startIcon={<MoneyOffIcon />}
+                                            sx={{
+                                                backgroundImage: 'linear-gradient(45deg, #f44336, #e91e63)', // A red-pink gradient
+                                                color: 'white',
+                                                ':hover': {
+                                                bgcolor: 'secondary.dark', // Darken the button when hovered
+                                                boxShadow: '0 3px 5px 2px rgba(233, 30, 99, .3)', // Adjust the shadow color to match
+                                                },
+                                            }}
+                                            >
+                                            Add New Expense
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Button
+                                            variant="contained"
+                                            fullWidth
+                                            onClick={handleOpenAddRevenue}
+                                            startIcon={<AttachMoneyIcon />}
+                                            sx={{
+                                                backgroundImage: 'linear-gradient(45deg, #4caf50, #81c784)',
+                                                color: 'white',
+                                                ':hover': {
+                                                bgcolor: 'success.dark',
+                                                boxShadow: '0 3px 5px 2px rgba(129, 199, 132, .3)',
+                                                },
+                                            }}
+                                            >
+                                            Add New Revenue
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Button
+                                            variant="contained"
+                                            color="info"
+                                            fullWidth
+                                            onClick={handleOpenMainAssetDialog}
+                                            startIcon={<AddBusinessIcon />}
+                                            sx={{
+                                                backgroundImage: 'linear-gradient(45deg, #29b6f6, #4fc3f7)', // Blue gradient
+                                                color: 'white',
+                                                ':hover': {
+                                                bgcolor: 'info.dark', // Darken the button when hovered
+                                                boxShadow: '0 3px 5px 2px rgba(79, 195, 247, .3)', // Custom shadow
+                                                },
+                                            }}
+                                            >
+                                            Add Asset
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Container>
                     <ProjectFetcher />
-                    <Button variant="contained" color="primary" onClick={handleOpenAddProject}>
-                        Add New Project
-                    </Button>
-                    <Button variant="contained" color="secondary" onClick={handleOpenAddExpense} style={{ marginLeft: '10px' }}>
-                        Add New Expense
-                    </Button>
-                    <Button variant="contained" color="success" onClick={handleOpenAddRevenue} style={{ marginLeft: '10px' }}>
-                        Add New Revenue
-                    </Button>
-                    <Button variant="contained" color="info" onClick={handleOpenMainAssetDialog} style={{ marginLeft: '10px' }}>
-                        Add Asset
-                    </Button>
                     <AddProject open={openAddProject} handleClose={handleCloseAddProject} setProjects={setProjects}/>
                     <AddExpense open={openAddExpense} handleClose={handleCloseAddExpense} projects={projects} assets={assets} employees={employees} />
                     <AddRevenue open={openAddRevenue} handleClose={handleCloseAddRevenue} projects={projects} />

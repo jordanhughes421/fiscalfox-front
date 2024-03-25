@@ -185,7 +185,7 @@ const ProjectFetcher = () => {
     } else {
       // Desktop view with Table
       return (
-        <TableContainer component={Paper} sx={{ maxWidth: '80%', margin: 'auto', overflowX: 'auto' }}>
+        <TableContainer component={Paper} sx={{ maxWidth: '90%', margin: 'auto', overflowX: 'auto' }}>
           <Table sx={{ minWidth: 650 }} aria-label="projects table">
             <TableHead>
               <TableRow>
