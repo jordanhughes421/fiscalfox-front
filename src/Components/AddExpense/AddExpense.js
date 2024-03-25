@@ -84,7 +84,6 @@ const AddExpense = ({ open, handleClose }) => {
 
   useEffect(() => {
     const fetchProjectsAssetsAndEmployees = async () => {
-      console.log('add expense');
       const token = localStorage.getItem('token');
 
       try {

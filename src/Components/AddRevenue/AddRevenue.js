@@ -16,7 +16,6 @@ const AddRevenue = ({ open, handleClose }) => {
   useEffect(() => {
     // Fetch projects to map in the Select component
     const fetchProjects = async () => {
-      console.log('add revenue');
       try {
         const response = await fetch(`${baseUrl}/projects`, {
           headers: {

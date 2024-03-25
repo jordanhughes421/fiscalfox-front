@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
@@ -9,6 +9,40 @@ export const AuthProvider = ({ children }) => {
     // Initial check to see if the user is logged in based on localStorage
     return localStorage.getItem('isLoggedIn') === 'true';
   });
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
+      const isLocalLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      const token = localStorage.getItem('token');
+
+      if (isLocalLoggedIn && token) {
+        try {
+          const response = await fetch(`${baseUrl}/projects`, { // Assuming a validate-session endpoint
+            method: 'GET', // Using GET instead of POST
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          setIsLoggedIn(response.ok);
+          if (!response.ok) {
+            // If the session is not valid, clear the relevant localStorage items
+            localStorage.removeItem('token');
+            localStorage.setItem('isLoggedIn', false);
+            localStorage.removeItem('fiscalfoxID');
+          }
+        } catch (error) {
+          console.error("Error validating session:", error);
+          setIsLoggedIn(false);
+        }
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   const logout = () => { // Use camelCase for functions
     localStorage.removeItem('token'); // Remove token from storage
