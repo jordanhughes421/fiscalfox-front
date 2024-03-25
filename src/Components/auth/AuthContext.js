@@ -6,8 +6,28 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    // Initial check to see if the user is logged in based on localStorage
-    return localStorage.getItem('isLoggedIn') === 'true';
+    const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
+    const isLocalLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const token = localStorage.getItem('token');
+
+    if (isLocalLoggedIn && token) {
+      try {
+        const response =  fetch(`${baseUrl}/projects`, { // Assuming a validate-session endpoint
+          method: 'GET', // Using GET instead of POST
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        
+        return response.ok;
+      } catch (error) {
+        console.error("Error validating session:", error);
+        return false;
+      }
+    } else {
+      return false;
+    }
   });
 
   useEffect(() => {
