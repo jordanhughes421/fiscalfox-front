@@ -135,39 +135,41 @@ const DataEditor = ({ open, handleClose, refreshProjects }) => {
                         ))}
                     </Select>
                 </FormControl>
-                <FormControl fullWidth margin="dense">
-                    <InputLabel id="entity-select-label">Select {entityType}</InputLabel>
-                    <Select
+                {entityType && ( // This checks if entityType is not empty
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel id="entity-select-label">Select {entityType.charAt(0).toUpperCase() + entityType.slice(1)}</InputLabel>
+                        <Select
                         labelId="entity-select-label"
                         value={selectedEntityId}
                         onChange={(e) => setSelectedEntityId(e.target.value)}
                         displayEmpty
-                    >
+                        >
                         {entities.map((entity) => (
                             <MenuItem key={entity._id} value={entity._id}>
-                                {entity.name || entity.description || `${entity.firstName} ${entity.lastName}`}
+                            {entity.name || entity.description || `${entity.firstName} ${entity.lastName}`}
                             </MenuItem>
                         ))}
-                    </Select>
-                </FormControl>
-                {Object.keys(selectedEntityData).map(field => {
-                const isDateField = entityFields[entityType].includes(field) && field.toLowerCase().includes('date');
-                    return (
-                        <TextField
-                            key={field}
-                            margin="dense"
-                            id={field}
-                            name={field}
-                            label={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1').trim()}
-                            type={isDateField ? "date" : "text"} // Use "date" type for date fields
-                            fullWidth
-                            variant="outlined"
-                            value={selectedEntityData[field] || ''} // Ensures controlled component for date fields
-                            onChange={handleEntityDataChange}
-                            InputLabelProps={isDateField ? { shrink: true } : undefined}
-                        />
-                    );
-                })}
+                        </Select>
+                    </FormControl>
+                )}
+                    {Object.keys(selectedEntityData).map(field => {
+                    const isDateField = entityFields[entityType].includes(field) && field.toLowerCase().includes('date');
+                        return (
+                            <TextField
+                                key={field}
+                                margin="dense"
+                                id={field}
+                                name={field}
+                                label={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1').trim()}
+                                type={isDateField ? "date" : "text"} // Use "date" type for date fields
+                                fullWidth
+                                variant="outlined"
+                                value={selectedEntityData[field] || ''} // Ensures controlled component for date fields
+                                onChange={handleEntityDataChange}
+                                InputLabelProps={isDateField ? { shrink: true } : undefined}
+                            />
+                        );
+                    })}
 
             </DialogContent>
             <DialogActions>

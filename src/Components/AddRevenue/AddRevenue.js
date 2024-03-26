@@ -110,17 +110,6 @@ const AddRevenue = ({ open, handleClose, selectedProject, refreshProjects }) => 
         />
         <TextField
           margin="dense"
-          id="amount"
-          name="amount"
-          label="Amount"
-          type="number"
-          fullWidth
-          required
-          value={revenueData.amount}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="dense"
           id="category"
           name="category"
           label="Category"
@@ -140,6 +129,17 @@ const AddRevenue = ({ open, handleClose, selectedProject, refreshProjects }) => 
           fullWidth
           required
           value={revenueData.date}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="dense"
+          id="amount"
+          name="amount"
+          label="Amount"
+          type="number"
+          fullWidth
+          required
+          value={revenueData.amount}
           onChange={handleChange}
         />
       </DialogContent>

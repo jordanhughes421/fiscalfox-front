@@ -12,6 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DataEditor from '../DataEditor/DataEditor';
 import DataDeleter from '../DataDeleter/DataDeleter';
 import AddRevenue from '../AddRevenue/AddRevenue';
+import AddExpense from '../AddExpense/AddExpense';
 
 const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
 
@@ -26,6 +27,9 @@ const ProjectFetcher = () => {
   const [breakdownModalOpen, setBreakdownModalOpen] = useState(false);
   const [selectedProjectBreakdown, setSelectedProjectBreakdown] = useState(null);
   const [openAddRevenue, setOpenAddRevenue] = useState(false);
+  const [openAddExpense, setOpenAddExpense] = useState(false);
+  const handleOpenAddExpense = () => setOpenAddExpense(true);
+  const handleCloseAddExpense = () => setOpenAddExpense(false);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('md'));
   const handleOpenAddRevenue = () => setOpenAddRevenue(true);
@@ -276,6 +280,22 @@ const ProjectFetcher = () => {
             </Table>
           </TableContainer>
         </DialogContent>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={handleOpenAddExpense}
+          startIcon={<MoneyOffIcon />}
+          sx={{
+              backgroundImage: 'linear-gradient(45deg, #f44336, #e91e63)', // A red-pink gradient
+              color: 'white',
+              ':hover': {
+              bgcolor: 'secondary.dark', // Darken the button when hovered
+              boxShadow: '0 3px 5px 2px rgba(233, 30, 99, .3)', // Adjust the shadow color to match
+              },
+          }}
+          >
+          Add New Expense
+        </Button>
         <Button onClick={handleExpenseCloseModal} color="primary" style={{ margin: '20px' }}>
         Close
       </Button>
@@ -411,6 +431,10 @@ const ProjectFetcher = () => {
 {openAddRevenue && (
   <AddRevenue open={openAddRevenue} handleClose={handleCloseAddRevenue} selectedProject={selectedProject} refreshProjects={fetchProjectsExpensesAndRevenues}/>
 )}
+{openAddExpense && (
+  <AddExpense open={openAddExpense} handleClose={handleCloseAddExpense} selectedProject={selectedProject} refreshProjects={fetchProjectsExpensesAndRevenues}/>
+)}
+
       <DataEditor
         open={editModalOpen}
         handleClose={handleEditClose}

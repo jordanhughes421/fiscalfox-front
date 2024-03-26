@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
 
-const AddExpense = ({ open, handleClose }) => {
+const AddExpense = ({ open, handleClose, selectedProject, refreshProjects }) => {
     // Assuming projects, assets, and employees are fetched from the parent component for now
     const [projects, setProjects] = useState([]); // Placeholder if you're fetching projects here
     const [assets, setAssets] = useState([]); // Placeholder for assets state
@@ -11,7 +11,7 @@ const AddExpense = ({ open, handleClose }) => {
     const [vehicleUsageRate, setVehicleUsageRate] = useState(null);
     const [expenseData, setExpenseData] = useState({
       expenseType: '',
-      project: '',
+      project: selectedProject ? selectedProject._id : '',
       description: '',
       category: '',
       date: '',
@@ -178,79 +178,6 @@ const AddExpense = ({ open, handleClose }) => {
   }
 };
 
-
-  const CommonFields = ({ projects, expenseData }) => (
-    <>
-      <FormControl fullWidth margin="dense">
-        <InputLabel id="project-select-label">Project</InputLabel>
-        <Select
-          labelId="project-select-label"
-          id="project"
-          name="project"
-          value={expenseData.project}
-          onChange={handleChange}
-          required
-        >
-          {projects.map((project) => (
-            <MenuItem key={project._id} value={project._id}>{project.name}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <TextField
-        margin="dense"
-        id="description"
-        name="description"
-        label="Description"
-        type="text"
-        fullWidth
-        variant="outlined"
-        value={expenseData.description}
-        onChange={handleChange}
-        required
-      />
-      <TextField
-        margin="dense"
-        id="category"
-        name="category"
-        label="Category"
-        type="text"
-        fullWidth
-        variant="outlined"
-        value={expenseData.category}
-        onChange={handleChange}
-        required
-      />
-      <TextField
-        margin="dense"
-        id="date"
-        name="date"
-        label="Date"
-        type="date"
-        fullWidth
-        variant="outlined"
-        InputLabelProps={{ shrink: true }}
-        value={expenseData.date}
-        onChange={handleChange}
-        required
-      />
-      <TextField
-        margin="dense"
-        id="amount"
-        name="amount"
-        label="Amount"
-        type="number"
-        fullWidth
-        variant="outlined"
-        value={expenseData.amount}
-        onChange={handleChange}
-        required
-        InputProps={{
-            readOnly: isVehicle, // Make amount field read-only if an asset is a vehicle
-        }}
-      />
-    </>
-  );
-
   const handleSave = async () => {
     const token = localStorage.getItem('token');
     // Assuming the base URL is defined outside this function
@@ -281,6 +208,7 @@ const AddExpense = ({ open, handleClose }) => {
             // Assuming there's a way to update the parent component or context that holds the expenses state
             // For example, if this component was passed a method to update the expenses in the parent component:
             // updateExpenses([...expenses, addedExpense]);
+            refreshProjects && refreshProjects();
             handleClose(); // Close the dialog
             // Reset the form data state here if you want the form to be cleared on successful submission
             setExpenseData({
@@ -310,24 +238,14 @@ return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Add New Expense</DialogTitle>
       <DialogContent>
-        <FormControl fullWidth margin="dense">
-          <InputLabel id="expense-type-label">Expense Type</InputLabel>
-          <Select
-            labelId="expense-type-label"
-            id="expenseType"
-            name="expenseType"
-            value={expenseData.expenseType}
-            onChange={handleChange}
-            required
-          >
-            <MenuItem value="Asset Expense">Asset Expense</MenuItem>
-            <MenuItem value="Single Expense">Single Expense</MenuItem>
-            <MenuItem value="Unit Expense">Unit Expense</MenuItem>
-            <MenuItem value="Employee Expense">Employee Expense</MenuItem>
-          </Select>
-        </FormControl>
         {/* Common fields for all expense types */}
-          <InputLabel id="project-select-label">Project</InputLabel>
+        {selectedProject ? (
+          <Typography variant="h6" gutterBottom>
+            Project: {selectedProject.name} {/* Display selected project as a title */}
+          </Typography>
+        ) : (
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="project-select-label">Project</InputLabel>
             <Select
               labelId="project-select-label"
               id="project"
@@ -340,6 +258,24 @@ return (
                 <MenuItem key={project._id} value={project._id}>{project.name}</MenuItem>
               ))}
             </Select>
+          </FormControl>
+        )}
+          <FormControl fullWidth margin="dense">
+          <InputLabel id="expense-type-label">Expense Type</InputLabel>
+          <Select
+            labelId="expense-type-label"
+            id="expenseType"
+            name="expenseType"
+            value={expenseData.expenseType}
+            onChange={handleChange}
+            required
+          >
+            <MenuItem value="Single Expense">Single Expense</MenuItem>
+            <MenuItem value="Asset Expense">Asset Expense</MenuItem>
+            <MenuItem value="Unit Expense">Unit Expense</MenuItem>
+            <MenuItem value="Employee Expense">Employee Expense</MenuItem>
+          </Select>
+        </FormControl>
           <TextField
             margin="dense"
             id="description"
