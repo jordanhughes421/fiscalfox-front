@@ -5,6 +5,9 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import { useAuth } from '../auth/AuthContext';
 import ProjectFetcher from '../fetchers/projectFetcher';
 import AddProject from '../AddProject/AddProject';
@@ -16,6 +19,9 @@ import AddAsset from '../AddAsset/AddAsset';
 import AddVehicleAsset from '../AddAsset/AddVehicleAsset';
 import AddConsumableAsset from '../AddAsset/AddConsumableAsset';
 import MainAssetDialogue from '../AddAsset/MainAssetDialogue';
+import AddClient from '../AddClient/AddClient';
+import AddInvoice from '../AddInvoice/AddInvoice';
+import AddQuote from '../AddQuote/AddQuote';
 
 function HomePage() {
     const { isLoggedIn } = useAuth();
@@ -23,6 +29,9 @@ function HomePage() {
     const [openAddExpense, setOpenAddExpense] = useState(false);
     const [openAddRevenue, setOpenAddRevenue] = useState(false);
     const [openDataDeleter, setOpenDataDeleter] = useState(false); 
+    const [openAddClient, setOpenAddClient] = useState(false);
+    const [openAddInvoice, setOpenAddInvoice] = useState(false);
+    const [openAddQuote, setOpenAddQuote] = useState(false);
     const [projects, setProjects] = useState([]);
     const [assets, setAssets] = useState([]);
     const [employees, setEmployees] = useState([]);
@@ -42,7 +51,12 @@ function HomePage() {
     const handleCloseAddRevenue = () => setOpenAddRevenue(false);
     const handleOpenDataEditor = () => setOpenDataEditor(true);
     const handleCloseDataEditor = () => setOpenDataEditor(false);
-
+    const handleOpenAddClient = () => setOpenAddClient(true);
+    const handleCloseAddClient = () => setOpenAddClient(false);
+    const handleOpenAddInvoice = () => setOpenAddInvoice(true);
+    const handleCloseAddInvoice = () => setOpenAddInvoice(false);
+    const handleOpenAddQuote = () => setOpenAddQuote(true);
+    const handleCloseAddQuote = () => setOpenAddQuote(false);
     
     // Handlers for DataDeleter
     const handleOpenDataDeleter = () => setOpenDataDeleter(true);
@@ -154,6 +168,64 @@ function HomePage() {
                                             Add Asset
                                         </Button>
                                     </Grid>
+                                    <Grid item xs={6}>
+                                        <Button
+                                            variant="contained"
+                                            fullWidth
+                                            onClick={handleOpenAddClient}
+                                            startIcon={<PersonAddIcon />}
+                                            sx={{
+                                                backgroundImage: 'linear-gradient(to right, #42a5f5, #478ed1)', // Adjusted gradient direction and colors
+                                                color: 'white',
+                                                border: '1px solid rgba(255, 255, 255, 0.25)', // Subtle border
+                                                ':hover': {
+                                                bgcolor: 'info.dark',
+                                                boxShadow: '0 4px 6px 2px rgba(66, 165, 245, .3)', // Slightly different shadow for distinction
+                                                },
+                                            }}
+                                            >
+                                            Add Client
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Button
+                                            variant="contained"
+                                            fullWidth
+                                            onClick={handleOpenAddInvoice} // Make sure to adjust the handler for adding an invoice
+                                            startIcon={<ReceiptIcon />}
+                                            sx={{
+                                                backgroundImage: 'linear-gradient(to right, #1976d2, #1565c0)', // Deepening the blue gradient
+                                                color: 'white',
+                                                border: '1px solid rgba(255, 255, 255, 0.25)', // Keeping the subtle border
+                                                ':hover': {
+                                                // Adjusting hover styles for a distinct but coherent look
+                                                bgcolor: 'primary.dark', // Switching to primary dark for a different hover effect
+                                                boxShadow: '0 4px 6px 2px rgba(25, 118, 210, .4)', // Deepened shadow for more emphasis
+                                                },
+                                            }}
+                                            >
+                                            Add Invoice
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Button
+                                            variant="contained"
+                                            fullWidth
+                                            onClick={handleOpenAddQuote} // Adjusted handler for adding a quote
+                                            startIcon={<FormatQuoteIcon />}
+                                            sx={{
+                                                backgroundImage: 'linear-gradient(to right, #66bb6a, #43a047)', // A fresh green gradient
+                                                color: 'white',
+                                                border: '1px solid rgba(255, 255, 255, 0.25)', // Subtle white border for sophistication
+                                                ':hover': {
+                                                bgcolor: 'success.dark', // Use a dark success color for hover for differentiation
+                                                boxShadow: '0 4px 6px 2px rgba(102, 187, 106, .4)', // Shadow with a green hue for emphasis
+                                                },
+                                            }}
+                                            >
+                                            Add Quote
+                                        </Button>
+                                    </Grid>
                                 </Grid>
                             </CardContent>
                         </Card>
@@ -162,6 +234,9 @@ function HomePage() {
                     <AddProject open={openAddProject} handleClose={handleCloseAddProject} setProjects={setProjects}/>
                     <AddExpense open={openAddExpense} handleClose={handleCloseAddExpense} projects={projects} assets={assets} employees={employees} />
                     <AddRevenue open={openAddRevenue} handleClose={handleCloseAddRevenue} projects={projects} />
+                    <AddClient open={openAddClient} handleClose={handleCloseAddClient} />
+                    <AddInvoice open={openAddInvoice} handleClose={handleCloseAddInvoice} />
+                    <AddQuote open={openAddQuote} handleClose={handleCloseAddQuote} />
                     <MainAssetDialogue
                         open={openMainAssetDialog}
                         handleClose={handleCloseMainAssetDialog}
