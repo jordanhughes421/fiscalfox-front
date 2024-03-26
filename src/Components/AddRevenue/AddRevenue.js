@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
 
-const AddRevenue = ({ open, handleClose }) => {
+const AddRevenue = ({ open, handleClose, selectedProject, refreshProjects }) => {
   const [projects, setProjects] = useState([]);
   const [revenueData, setRevenueData] = useState({
-    project: '',
+    project: selectedProject ? selectedProject._id : '', // Pre-populate if selectedProject exists
     description: '',
     amount: '',
     category: '',
@@ -12,31 +12,33 @@ const AddRevenue = ({ open, handleClose }) => {
   });
   const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com'; // Update with your actual API endpoint
   const token = localStorage.getItem('token');
+
   
   useEffect(() => {
-    // Fetch projects to map in the Select component
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch(`${baseUrl}/projects`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+    if (!selectedProject) { // Only fetch projects if no selectedProject is provided
+      const fetchProjects = async () => {
+        try {
+          const response = await fetch(`${baseUrl}/projects`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setProjects(data);
+          } else {
+            throw new Error("Failed to fetch projects");
           }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setProjects(data);
-        } else {
-          throw new Error("Failed to fetch projects");
+        } catch (error) {
+          console.error("Error fetching projects:", error);
         }
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    };
+      };
 
-    fetchProjects();
-  }, []);
+      fetchProjects();
+    }
+  }, [selectedProject, token, baseUrl]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,7 +49,6 @@ const AddRevenue = ({ open, handleClose }) => {
   };
 
   const handleSave = async () => {
-    const token = localStorage.getItem('token');
     try {
       const response = await fetch(`${baseUrl}/revenue`, {
         method: 'POST',
@@ -59,9 +60,8 @@ const AddRevenue = ({ open, handleClose }) => {
       });
 
       if (response.ok) {
-        // Handle success scenario (e.g., updating a list of revenues or closing the dialog)
         handleClose();
-        // Optionally reset revenueData state here
+        refreshProjects && refreshProjects(); // Optionally call refreshProjects if provided
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to add revenue");
@@ -75,21 +75,27 @@ const AddRevenue = ({ open, handleClose }) => {
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Add New Revenue</DialogTitle>
       <DialogContent>
-        <FormControl fullWidth margin="dense">
-          <InputLabel id="project-select-label">Project</InputLabel>
-          <Select
-            labelId="project-select-label"
-            id="project"
-            name="project"
-            value={revenueData.project}
-            onChange={handleChange}
-            required
-          >
-            {projects.map((project) => (
-              <MenuItem key={project._id} value={project._id}>{project.name}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+      {selectedProject ? (
+          <Typography variant="h6" gutterBottom>
+            Project: {selectedProject.name} {/* Display selected project as a title */}
+          </Typography>
+        ) : (
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="project-select-label">Project</InputLabel>
+            <Select
+              labelId="project-select-label"
+              id="project"
+              name="project"
+              value={revenueData.project}
+              onChange={handleChange}
+              required
+            >
+              {projects.map((project) => (
+                <MenuItem key={project._id} value={project._id}>{project.name}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
         <TextField
           autoFocus
           margin="dense"
@@ -100,17 +106,6 @@ const AddRevenue = ({ open, handleClose }) => {
           fullWidth
           required
           value={revenueData.description}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="dense"
-          id="amount"
-          name="amount"
-          label="Amount"
-          type="number"
-          fullWidth
-          required
-          value={revenueData.amount}
           onChange={handleChange}
         />
         <TextField
@@ -134,6 +129,17 @@ const AddRevenue = ({ open, handleClose }) => {
           fullWidth
           required
           value={revenueData.date}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="dense"
+          id="amount"
+          name="amount"
+          label="Amount"
+          type="number"
+          fullWidth
+          required
+          value={revenueData.amount}
           onChange={handleChange}
         />
       </DialogContent>
