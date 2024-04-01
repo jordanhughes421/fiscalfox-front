@@ -24,7 +24,7 @@ const DataEditor = ({ open, handleClose, refreshProjects }) => {
     const [entities, setEntities] = useState([]);
     const [selectedEntityId, setSelectedEntityId] = useState('');
     const [selectedEntityData, setSelectedEntityData] = useState({});
-    const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
+    const baseUrl = 'https://www.fiscalfoxapi.com';
 
     useEffect(() => {
         if (!entityType) return;

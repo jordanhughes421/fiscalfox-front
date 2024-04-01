@@ -6,7 +6,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
+    const baseUrl = 'https://www.fiscalfoxapi.com';
     const isLocalLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const token = localStorage.getItem('token');
 
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const checkLoginStatus = async () => {
-      const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
+      const baseUrl = 'https://www.fiscalfoxapi.com';
       const isLocalLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
       const token = localStorage.getItem('token');
 

@@ -11,7 +11,7 @@ const AddInvoice = ({ open, handleClose, selectedClient, refreshInvoices }) => {
     paid: false,
     datePaid: ''
   });
-  const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com'; // Update with your actual API endpoint
+  const baseUrl = 'https://www.fiscalfoxapi.com'; // Update with your actual API endpoint
   const token = localStorage.getItem('token');
 
   useEffect(() => {

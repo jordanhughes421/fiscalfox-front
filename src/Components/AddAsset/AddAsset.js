@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 const AddAsset = ({ open, handleClose }) => {
-    const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com'; // Update with your actual API endpoint
+    const baseUrl = 'https://www.fiscalfoxapi.com'; // Update with your actual API endpoint
     const [assetData, setAssetData] = useState({
         name: '',
         description: '',

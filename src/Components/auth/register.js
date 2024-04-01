@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Container, TextField, Typography, Paper, Alert } from '@mui/material';
 
-const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
+const baseUrl = 'https://www.fiscalfoxapi.com';
 
 function Register() {
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ function Register() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
     };
+
 
     try {
       const response = await fetch(`${baseUrl}/auth/register`, requestOptions);
@@ -105,6 +106,14 @@ function Register() {
             sx={{ mt: 3, mb: 2 }}
           >
             Sign Up
+          </Button>
+          <Button
+          fullWidth
+          variant="outlined"
+          onClick={() => window.location.href = `${baseUrl}/auth/auth/google`}
+          sx={{ mb: 2 }}
+          >
+          Sign Up with Google
           </Button>
           <Button
             fullWidth

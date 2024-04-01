@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
+const baseUrl = 'https://www.fiscalfoxapi.com';
 
 const ExpenseFetcher = () => {
   const [expenses, setExpenses] = useState([]);

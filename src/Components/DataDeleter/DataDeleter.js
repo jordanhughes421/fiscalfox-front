@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 
 const DataDeleter = ({ open, handleClose, itemId, itemType, refreshProjects }) => {
-    const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
+    const baseUrl = 'https://www.fiscalfoxapi.com';
 
     const handleDelete = async () => {
         

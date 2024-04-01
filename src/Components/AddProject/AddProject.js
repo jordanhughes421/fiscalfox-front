@@ -6,7 +6,7 @@ const AddProject = ({ open, handleClose, setProjects }) => {
   const [description, setDescription] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com'; // Make sure to replace this with your actual backend URL
+  const baseUrl = 'https://www.fiscalfoxapi.com'; // Make sure to replace this with your actual backend URL
 
   const handleSave = async () => {
     const userID = localStorage.getItem('fiscalfoxID');

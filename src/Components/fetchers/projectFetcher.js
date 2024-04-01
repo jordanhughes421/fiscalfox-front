@@ -14,7 +14,7 @@ import DataDeleter from '../DataDeleter/DataDeleter';
 import AddRevenue from '../AddRevenue/AddRevenue';
 import AddExpense from '../AddExpense/AddExpense';
 
-const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
+const baseUrl = 'https://www.fiscalfoxapi.com';
 
 const ProjectFetcher = () => {
   const [projects, setProjects] = useState([]);

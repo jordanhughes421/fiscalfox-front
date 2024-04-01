@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 const AddConsumableAsset = ({ open, handleClose }) => {
-    const baseUrl = 'https://projectfinancetracker-backend-2f2604a2f7f0.herokuapp.com';
+    const baseUrl = 'https://www.fiscalfoxapi.com';
     const [consumableAssetData, setConsumableAssetData] = useState({
         name: '',
         description: '',
