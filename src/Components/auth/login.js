@@ -89,6 +89,14 @@ function Login() {
             Login
           </Button>
           <Button
+          fullWidth
+          variant="outlined"
+          onClick={() => window.location.href = `${baseUrl}/auth/auth/google`}
+          sx={{ mb: 2 }}
+          >
+          Log in with Google
+          </Button>
+          <Button
             fullWidth
             variant="text"
             onClick={() => navigate('/register')}

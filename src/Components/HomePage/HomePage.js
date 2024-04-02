@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { NavLink, useLocation } from "react-router-dom";
 import { Box, Button, Typography, Grid, Paper, Card, CardContent, Container } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
@@ -25,6 +25,7 @@ import AddQuote from '../AddQuote/AddQuote';
 
 function HomePage() {
     const { isLoggedIn } = useAuth();
+    const { login } = useAuth();
     const [openAddProject, setOpenAddProject] = useState(false);
     const [openAddExpense, setOpenAddExpense] = useState(false);
     const [openAddRevenue, setOpenAddRevenue] = useState(false);
@@ -85,7 +86,20 @@ function HomePage() {
     };
     const handleCloseAddConsumableAssetDialog = () => setOpenAddConsumableAsset(false);
 
+    const location = useLocation();
 
+    useEffect(() => {
+        // Function to parse query string and extract 'token' parameter
+        const searchParams = new URLSearchParams(location.search);
+        const token = searchParams.get('token');
+
+        if (token) {
+            //console.log('Token found in URL:', token);
+            // Here you can handle the token as needed, e.g., storing it for future requests
+            login(token);
+            // Or update your auth context/state
+        }
+    }, [location]);
 
     return (
         <Box sx={{ flexGrow: 1 }}>
