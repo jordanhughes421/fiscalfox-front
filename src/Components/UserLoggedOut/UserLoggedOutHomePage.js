@@ -4,23 +4,8 @@ import { Box, Button, Typography, Grid, Paper, Card, CardContent, Container } fr
 import { useAuth } from '../auth/AuthContext';
 
 
-function HomePage() {
+function UserLoggedOutHomePage() {
     const { login } = useAuth();
-
-    const location = useLocation();
-
-    useEffect(() => {
-        // Function to parse query string and extract 'token' parameter
-        const searchParams = new URLSearchParams(location.search);
-        const token = searchParams.get('token');
-
-        if (token) {
-            //console.log('Token found in URL:', token);
-            // Here you can handle the token as needed, e.g., storing it for future requests
-            login(token);
-            // Or update your auth context/state
-        }
-    }, [location]);
 
     return (
         <Box sx={{ flexGrow: 1 }}> 
@@ -73,4 +58,4 @@ function HomePage() {
     );
 }
 
-export default HomePage;
+export default UserLoggedOutHomePage;
