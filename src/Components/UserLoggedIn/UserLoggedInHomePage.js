@@ -22,6 +22,7 @@ import MainAssetDialogue from '../AddAsset/MainAssetDialogue';
 import AddClient from '../AddClient/AddClient';
 import AddInvoice from '../AddInvoice/AddInvoice';
 import AddQuote from '../AddQuote/AddQuote';
+import Dashboard from './Dashboard/Dashboard';
 
 function UserLoggedInHomePage() {
     const { isLoggedIn } = useAuth();
@@ -88,6 +89,7 @@ function UserLoggedInHomePage() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
+            <Dashboard />
             <>
                 <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
                     <Card>
