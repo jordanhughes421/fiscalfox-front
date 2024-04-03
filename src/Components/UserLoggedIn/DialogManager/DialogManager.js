@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Grid, Card, CardContent, Container } from '@mui/material';
+import { Box, Button, Grid, Card, CardContent, Container, SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -21,44 +21,41 @@ import AddInvoice from '../DataComponents/AddInvoice/AddInvoice';
 import AddQuote from '../DataComponents/AddQuote/AddQuote';
 
 function DialogManager({ projects, openDialog, handleCloseDialogs, handleOpenDialogs, refreshProjects }) {
+    const [speedDialOpen, setSpeedDialOpen] = useState(false);
+
+    const actions = [
+        { icon: <AddCircleOutlineIcon />, name: "Add New Project", action: () => handleOpenDialogs('addProject') },
+        { icon: <MoneyOffIcon />, name: "Add New Expense", action: () => handleOpenDialogs('addExpense') },
+        { icon: <AttachMoneyIcon />, name: "Add New Revenue", action: () => handleOpenDialogs('addRevenue') },
+        { icon: <AddBusinessIcon />, name: "Add Asset", action: () => handleOpenDialogs('mainAssetDialogue') },
+        { icon: <PersonAddIcon />, name: "Add Client", action: () => handleOpenDialogs('addClient') },
+        { icon: <ReceiptIcon />, name: "Add Invoice", action: () => handleOpenDialogs('addInvoice') },
+        { icon: <FormatQuoteIcon />, name: "Add Quote", action: () => handleOpenDialogs('addQuote') },
+    ];
 
     return (
         <>
-            <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
-                <Card>
-                    <CardContent>
-                        <Grid container spacing={4} alignItems="center" justifyContent="center">
-                            {/* Dynamically generate buttons */}
-                            {[
-                                { icon: AddCircleOutlineIcon, label: "Add New Project", onClick: () => handleOpenDialogs('addProject'), colorScheme: '#FE6B8B 30%, #FF8E53 90%' },
-                                { icon: MoneyOffIcon, label: "Add New Expense", onClick: () => handleOpenDialogs('addExpense'), colorScheme: '#f44336, #e91e63' },
-                                { icon: AttachMoneyIcon, label: "Add New Revenue", onClick: () => handleOpenDialogs('addRevenue'), colorScheme: '#4caf50, #81c784' },
-                                { icon: AddBusinessIcon, label: "Add Asset", onClick: () => handleOpenDialogs('mainAssetDialogue'), colorScheme: '#29b6f6, #4fc3f7' },
-                                { icon: PersonAddIcon, label: "Add Client", onClick: () => handleOpenDialogs('addClient'), colorScheme: '#42a5f5, #478ed1' },
-                                { icon: ReceiptIcon, label: "Add Invoice", onClick: () => handleOpenDialogs('addInvoice'), colorScheme: '#1976d2, #1565c0' },
-                                { icon: FormatQuoteIcon, label: "Add Quote", onClick: () => handleOpenDialogs('addQuote'), colorScheme: '#66bb6a, #43a047' },
-                            ].map((button, index) => (
-                                <Grid item xs={6} key={index}>
-                                    <Button
-                                        variant="contained"
-                                        fullWidth
-                                        startIcon={<button.icon />}
-                                        onClick={button.onClick}
-                                        sx={{
-                                            backgroundImage: `linear-gradient(45deg, ${button.colorScheme})`,
-                                            color: 'white',
-                                            ':hover': {
-                                                boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-                                            },
-                                        }}
-                                    >
-                                        {button.label}
-                                    </Button>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </CardContent>
-                </Card>
+            <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4, position: 'relative' }}>
+                <SpeedDial
+                    ariaLabel="Actions"
+                    sx={{ position: 'fixed', bottom: 16, right: 16 }}
+                    icon={<SpeedDialIcon />}
+                    onClose={() => setSpeedDialOpen(false)}
+                    onOpen={() => setSpeedDialOpen(true)}
+                    open={speedDialOpen}
+                >
+                    {actions.map((action) => (
+                        <SpeedDialAction
+                            key={action.name}
+                            icon={action.icon}
+                            tooltipTitle={action.name}
+                            onClick={() => {
+                                setSpeedDialOpen(false);
+                                action.action();
+                            }}
+                        />
+                    ))}
+                </SpeedDial>
             </Container>
             <AddProject open={openDialog === 'addProject'} handleClose={() => handleCloseDialogs()} refreshProjects={refreshProjects} />
             <AddExpense open={openDialog === 'addExpense'} handleClose={() => handleCloseDialogs()} projects={projects} refreshProjects={refreshProjects}/>
