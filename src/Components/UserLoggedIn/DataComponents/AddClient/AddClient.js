@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
 
-const AddClient = ({ open, handleClose, refreshClients }) => {
+const AddClient = ({ open, handleClose }) => {
   const [clientData, setClientData] = useState({
     firstName: '',
     lastName: '',
@@ -40,7 +40,8 @@ const AddClient = ({ open, handleClose, refreshClients }) => {
             address: '',
             phone: ''
         })
-        refreshClients && refreshClients(); // Optionally call refreshClients if provided
+        // Optionally call refreshClients if provided
+        //refreshClients && refreshClients(); 
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to add client");

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-const AddProject = ({ open, handleClose, setProjects }) => {
+const AddProject = ({ open, handleClose }) => {
   const [projectName, setProjectName] = useState('');
   const [description, setDescription] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -28,8 +28,8 @@ const AddProject = ({ open, handleClose, setProjects }) => {
       });
 
       if (response.ok) {
-        const newProject = await response.json();
-        setProjects(prevProjects => [...prevProjects, { ...newProject, expenses: [], revenues: [] }]);
+        //const newProject = await response.json();
+        //setProjects(prevProjects => [...prevProjects, { ...newProject, expenses: [], revenues: [] }]);
         handleClose(); // Close the dialog on success
       } else {
         const errorData = await response.json();

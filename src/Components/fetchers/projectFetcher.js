@@ -9,10 +9,10 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import DataEditor from '../DataEditor/DataEditor';
-import DataDeleter from '../DataDeleter/DataDeleter';
-import AddRevenue from '../AddRevenue/AddRevenue';
-import AddExpense from '../AddExpense/AddExpense';
+import DataEditor from '../UserLoggedIn/DataComponents/DataEditor/DataEditor';
+import DataDeleter from '../UserLoggedIn/DataComponents/DataDeleter/DataDeleter';
+import AddRevenue from '../UserLoggedIn/DataComponents/AddRevenue/AddRevenue';
+import AddExpense from '../UserLoggedIn/DataComponents/AddExpense/AddExpense';
 
 const baseUrl = 'https://www.fiscalfoxapi.com';
 
