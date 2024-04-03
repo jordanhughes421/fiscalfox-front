@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-const AddAsset = ({ open, handleClose }) => {
+const AddAsset = ({ open, handleClose, refreshProjects }) => {
     const baseUrl = 'https://www.fiscalfoxapi.com'; // Update with your actual API endpoint
     const [assetData, setAssetData] = useState({
         name: '',
@@ -45,6 +45,7 @@ const AddAsset = ({ open, handleClose }) => {
                 handleClose();
                 // Optionally reset assetData state here to clear the form
                 setAssetData({ name: '', description: '', purchaseDate: '', value: '', depreciationRate: '', usageRate: '' });
+                refreshProjects && refreshProjects();
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Failed to add asset");

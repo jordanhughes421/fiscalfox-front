@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
 
-const AddExpense = ({ open, handleClose, selectedProject, refreshProjects }) => {
+const AddExpense = ({ projects, open, handleClose, selectedProject, refreshProjects }) => {
     // Assuming projects, assets, and employees are fetched from the parent component for now
-    const [projects, setProjects] = useState([]); // Placeholder if you're fetching projects here
     const [assets, setAssets] = useState([]); // Placeholder for assets state
     const [employees, setEmployees] = useState([]); // Placeholder for employees state
     const [isVehicle, setIsVehicle] = useState(false);
@@ -87,13 +86,7 @@ const AddExpense = ({ open, handleClose, selectedProject, refreshProjects }) => 
       const token = localStorage.getItem('token');
 
       try {
-        const [projectsResponse, assetsResponse, employeesResponse] = await Promise.all([
-          fetch(`${baseUrl}/projects`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            }
-          }),
+        const [assetsResponse, employeesResponse] = await Promise.all([
           fetch(`${baseUrl}/asset`, {
             headers: {
               'Content-Type': 'application/json',
@@ -108,12 +101,10 @@ const AddExpense = ({ open, handleClose, selectedProject, refreshProjects }) => 
           })
         ]);
 
-        if (projectsResponse.ok && assetsResponse.ok && employeesResponse.ok) {
-          const projectsData = await projectsResponse.json();
+        if (assetsResponse.ok && employeesResponse.ok) {
           const assetsData = await assetsResponse.json();
           const employeesData = await employeesResponse.json();
 
-          setProjects(projectsData);
           setAssets(assetsData);
           setEmployees(employeesData);
         } else {
@@ -212,6 +203,7 @@ const AddExpense = ({ open, handleClose, selectedProject, refreshProjects }) => 
             handleClose(); // Close the dialog
             // Reset the form data state here if you want the form to be cleared on successful submission
             setExpenseData({
+                expenseType: '',
                 project: '',
                 description: '',
                 amount: '',

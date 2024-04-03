@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-const AddProject = ({ open, handleClose }) => {
+const AddProject = ({ open, handleClose, refreshProjects }) => {
   const [projectName, setProjectName] = useState('');
   const [description, setDescription] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -28,9 +28,12 @@ const AddProject = ({ open, handleClose }) => {
       });
 
       if (response.ok) {
-        //const newProject = await response.json();
+        await response.json();
         //setProjects(prevProjects => [...prevProjects, { ...newProject, expenses: [], revenues: [] }]);
+        refreshProjects();
         handleClose(); // Close the dialog on success
+        
+        
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to add project");

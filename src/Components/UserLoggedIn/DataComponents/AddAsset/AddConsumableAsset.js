@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-const AddConsumableAsset = ({ open, handleClose }) => {
+const AddConsumableAsset = ({ open, handleClose, refreshProjects }) => {
     const baseUrl = 'https://www.fiscalfoxapi.com';
     const [consumableAssetData, setConsumableAssetData] = useState({
         name: '',
@@ -48,6 +48,7 @@ const AddConsumableAsset = ({ open, handleClose }) => {
             });
 
             if (response.ok) {
+                refreshProjects && refreshProjects();
                 handleClose();
                 setConsumableAssetData({ name: '', description: '', purchaseDate: '', value: '', quantity: '', units: '' });
             } else {

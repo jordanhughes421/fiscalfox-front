@@ -20,7 +20,7 @@ import AddClient from '../DataComponents/AddClient/AddClient';
 import AddInvoice from '../DataComponents/AddInvoice/AddInvoice';
 import AddQuote from '../DataComponents/AddQuote/AddQuote';
 
-function DialogManager({ openDialog, handleCloseDialogs, handleOpenDialogs }) {
+function DialogManager({ projects, openDialog, handleCloseDialogs, handleOpenDialogs, refreshProjects }) {
 
     return (
         <>
@@ -60,9 +60,9 @@ function DialogManager({ openDialog, handleCloseDialogs, handleOpenDialogs }) {
                     </CardContent>
                 </Card>
             </Container>
-            <AddProject open={openDialog === 'addProject'} handleClose={() => handleCloseDialogs()} />
-            <AddExpense open={openDialog === 'addExpense'} handleClose={() => handleCloseDialogs()} />
-            <AddRevenue open={openDialog === 'addRevenue'} handleClose={() => handleCloseDialogs()} />
+            <AddProject open={openDialog === 'addProject'} handleClose={() => handleCloseDialogs()} refreshProjects={refreshProjects} />
+            <AddExpense open={openDialog === 'addExpense'} handleClose={() => handleCloseDialogs()} projects={projects} refreshProjects={refreshProjects}/>
+            <AddRevenue open={openDialog === 'addRevenue'} handleClose={() => handleCloseDialogs()} projects={projects} refreshProjects={refreshProjects}/>
             <DataDeleter open={openDialog === 'dataDeleter'} handleClose={() => handleCloseDialogs()} />
             <DataEditor open={openDialog === 'dataEditor'} handleClose={() => handleCloseDialogs()} />
             <AddAsset open={openDialog === 'addAsset'} handleClose={() => handleCloseDialogs()} />
