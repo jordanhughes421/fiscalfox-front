@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
 
-const AddRevenue = ({ open, handleClose, selectedProject, refreshProjects }) => {
-  const [projects, setProjects] = useState([]);
+const AddRevenue = ({ projects, open, handleClose, selectedProject, refreshProjects }) => {
   const [revenueData, setRevenueData] = useState({
     project: selectedProject ? selectedProject._id : '', // Pre-populate if selectedProject exists
     description: '',
@@ -13,32 +12,6 @@ const AddRevenue = ({ open, handleClose, selectedProject, refreshProjects }) => 
   const baseUrl = 'https://www.fiscalfoxapi.com'; // Update with your actual API endpoint
   const token = localStorage.getItem('token');
 
-  
-  useEffect(() => {
-    if (!selectedProject) { // Only fetch projects if no selectedProject is provided
-      const fetchProjects = async () => {
-        try {
-          const response = await fetch(`${baseUrl}/projects`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setProjects(data);
-          } else {
-            throw new Error("Failed to fetch projects");
-          }
-        } catch (error) {
-          console.error("Error fetching projects:", error);
-        }
-      };
-
-      fetchProjects();
-    }
-  }, [selectedProject, token, baseUrl]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

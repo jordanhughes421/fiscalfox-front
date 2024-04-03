@@ -9,15 +9,15 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import DataEditor from '../DataEditor/DataEditor';
-import DataDeleter from '../DataDeleter/DataDeleter';
-import AddRevenue from '../AddRevenue/AddRevenue';
-import AddExpense from '../AddExpense/AddExpense';
+import DataEditor from '../DataComponents/DataEditor/DataEditor';
+import DataDeleter from '../DataComponents/DataDeleter/DataDeleter';
+import AddRevenue from '../DataComponents/AddRevenue/AddRevenue';
+import AddExpense from '../DataComponents/AddExpense/AddExpense';
 
 const baseUrl = 'https://www.fiscalfoxapi.com';
 
-const ProjectFetcher = () => {
-  const [projects, setProjects] = useState([]);
+const ProjectTable = ({ projects, refreshProjects }) => {
+  
   const [expenseModalOpen, setExpenseModalOpen] = useState(false);
   const [revenueModalOpen, setRevenueModalOpen] = useState(false);
   const [currentDetails, setCurrentDetails] = useState({ expenses: [], revenues: [] });
@@ -34,77 +34,21 @@ const ProjectFetcher = () => {
   const matches = useMediaQuery(theme.breakpoints.down('md'));
   const handleOpenAddRevenue = () => setOpenAddRevenue(true);
   const handleCloseAddRevenue = () => setOpenAddRevenue(false);
+  const projectsWithExpensesAndRevenues = projects;
+
 
   useEffect(() => {
-    fetchProjectsExpensesAndRevenues();
+    if (selectedProject){
+        // Find the updated project data from the projectsWithExpensesAndRevenues array
+        const updatedSelectedProject = projectsWithExpensesAndRevenues.find(project => project._id === selectedProject._id);
+        if (updatedSelectedProject) {
+          // Update currentDetails and selectedProjectBreakdown with the new data
+          setCurrentDetails({ expenses: updatedSelectedProject.expenses, revenues: updatedSelectedProject.revenues });
+          setSelectedProjectBreakdown(updatedSelectedProject);
+        }
+      };
   }, []);
 
-  const fetchProjectsExpensesAndRevenues = async () => {
-    console.log("fetchProjectsExpensesAndRevenues")
-    const token = localStorage.getItem('token');
-    try {
-      const [expensesResponse, projectsResponse, revenuesResponse] = await Promise.all([
-        fetch(`${baseUrl}/expense`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        }),
-        fetch(`${baseUrl}/projects`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        }),
-        fetch(`${baseUrl}/revenue`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        }),
-      ]);
-
-      if (expensesResponse.ok && projectsResponse.ok && revenuesResponse.ok) {
-        const expensesData = await expensesResponse.json();
-        const projectsData = await projectsResponse.json();
-        const revenuesData = await revenuesResponse.json();
-
-        const projectsWithExpensesAndRevenues = projectsData.map(project => {
-          const projectExpenses = expensesData.filter(expense => project.expenses.includes(expense._id));
-          const projectRevenues = revenuesData.filter(revenue => project._id === revenue.project);
-          const totalExpenses = projectExpenses.reduce((acc, curr) => acc + curr.amount, 0);
-          const totalRevenues = projectRevenues.reduce((acc, curr) => acc + curr.amount, 0);
-          const profit = totalRevenues - totalExpenses;
-
-          return {
-            ...project,
-            expenses: projectExpenses,
-            revenues: projectRevenues,
-            profit,
-            totalExpenses,
-            totalRevenues,
-          };
-        });
-
-        setProjects(projectsWithExpensesAndRevenues);
-
-        if (selectedProject){
-          // Find the updated project data from the projectsWithExpensesAndRevenues array
-          const updatedSelectedProject = projectsWithExpensesAndRevenues.find(project => project._id === selectedProject._id);
-          if (updatedSelectedProject) {
-            // Update currentDetails and selectedProjectBreakdown with the new data
-            setCurrentDetails({ expenses: updatedSelectedProject.expenses, revenues: updatedSelectedProject.revenues });
-            setSelectedProjectBreakdown(updatedSelectedProject);
-          }
-        };
-
-      } else {
-        throw new Error("Failed to fetch data");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
 
   const handleExpenseOpenModal = (project) => {
     setSelectedProject(project);
@@ -154,9 +98,6 @@ const ProjectFetcher = () => {
     setBreakdownModalOpen(false);
   };
 
-  const refreshProjects = () => {
-    fetchProjectsExpensesAndRevenues();
-  };
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A'; // Return 'N/A' if date is not provided
@@ -429,10 +370,10 @@ const ProjectFetcher = () => {
 </Dialog>
 
 {openAddRevenue && (
-  <AddRevenue open={openAddRevenue} handleClose={handleCloseAddRevenue} selectedProject={selectedProject} refreshProjects={fetchProjectsExpensesAndRevenues}/>
+  <AddRevenue open={openAddRevenue} handleClose={handleCloseAddRevenue} selectedProject={selectedProject} refreshProjects={refreshProjects}/>
 )}
 {openAddExpense && (
-  <AddExpense open={openAddExpense} handleClose={handleCloseAddExpense} selectedProject={selectedProject} refreshProjects={fetchProjectsExpensesAndRevenues}/>
+  <AddExpense open={openAddExpense} handleClose={handleCloseAddExpense} selectedProject={selectedProject} refreshProjects={refreshProjects}/>
 )}
 
       <DataEditor
@@ -440,7 +381,7 @@ const ProjectFetcher = () => {
         handleClose={handleEditClose}
         initialEntityType="project"
         initialEntity={selectedProject}
-        refreshProjects={fetchProjectsExpensesAndRevenues}
+        refreshProjects={refreshProjects}
       />
 
 {deleteModalOpen && (
@@ -449,7 +390,7 @@ const ProjectFetcher = () => {
           handleClose={handleDeleteClose}
           itemId={selectedItemForDeletion.id}
           itemType={selectedItemForDeletion.type}
-          refreshProjects={fetchProjectsExpensesAndRevenues}
+          refreshProjects={refreshProjects}
         />
       )}
 
@@ -458,4 +399,4 @@ const ProjectFetcher = () => {
   );
 };
 
-export default ProjectFetcher;
+export default ProjectTable;

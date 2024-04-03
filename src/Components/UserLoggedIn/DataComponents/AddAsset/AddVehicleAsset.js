@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-const AddVehicleAsset = ({ open, handleClose }) => {
+const AddVehicleAsset = ({ open, handleClose, refreshProjects }) => {
     const baseUrl = 'https://www.fiscalfoxapi.com';
     const [vehicleData, setVehicleData] = useState({
         year: '',
@@ -47,6 +47,7 @@ const AddVehicleAsset = ({ open, handleClose }) => {
             });
 
             if (response.ok) {
+                refreshProjects && refreshProjects();
                 handleClose();
                 setVehicleData({ year: '', make: '', model: '', name: '', description: 'vehicle', purchaseDate: '', value: '', mpg: '' });
             } else {
