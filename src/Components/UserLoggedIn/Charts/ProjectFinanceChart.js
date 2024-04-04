@@ -34,7 +34,13 @@ const ProjectFinanceChart = ({ chartData }) => {
       }
     },
     fill: {
-      opacity: 1
+      type: 'gradient',
+      gradient: {
+        shadeIntensity: 0.5,
+        opacityFrom: 0.7,
+        opacityTo: 1,
+        stops: [0, 100]
+      }
     },
     tooltip: {
       y: {

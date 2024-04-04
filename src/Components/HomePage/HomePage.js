@@ -24,14 +24,14 @@ function HomePage() {
     }, [location, navigate]);
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <>
             {isLoggedIn && (
                 <UserLoggedInHomePage />
             )}
             {!isLoggedIn && (
                 <UserLoggedOutHomePage />
             )}
-        </Box>
+        </>
     );
 }
 

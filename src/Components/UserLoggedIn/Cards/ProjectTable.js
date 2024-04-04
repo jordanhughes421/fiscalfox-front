@@ -191,6 +191,8 @@ const ProjectTable = ({ projects, refreshProjects }) => {
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
         {renderProjects()}
       </Container>
+
+      
       <Dialog open={expenseModalOpen} onClose={handleExpenseCloseModal} fullWidth maxWidth="md">
         <DialogTitle>Project Details</DialogTitle>
         <DialogContent>
@@ -240,141 +242,141 @@ const ProjectTable = ({ projects, refreshProjects }) => {
         <Button onClick={handleExpenseCloseModal} color="primary" style={{ margin: '20px' }}>
         Close
       </Button>
-    </Dialog>
+      </Dialog>
 
-    <Dialog open={revenueModalOpen} onClose={handleRevenueCloseModal} fullWidth maxWidth="md">
-        <DialogTitle>Project Details</DialogTitle>
-        <DialogContent>
-          {/* Revenues Table */}
-          <Typography variant="h6" gutterBottom>Revenues</Typography>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Description</TableCell>
-                  <TableCell align="right">Amount</TableCell>
-                  <TableCell align="right">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {currentDetails.revenues.map((revenue) => (
-                  <TableRow key={revenue._id}>
-                    <TableCell>{revenue.description}</TableCell>
-                    <TableCell align="right">${revenue.amount.toFixed(2)}</TableCell>
-                    <TableCell align="right">
-                      <Button onClick={() => handleDeleteOpen(revenue, 'revenue')}>
-                        <DeleteIcon />
-                      </Button>
-                    </TableCell>
+      <Dialog open={revenueModalOpen} onClose={handleRevenueCloseModal} fullWidth maxWidth="md">
+          <DialogTitle>Project Details</DialogTitle>
+          <DialogContent>
+            {/* Revenues Table */}
+            <Typography variant="h6" gutterBottom>Revenues</Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Description</TableCell>
+                    <TableCell align="right">Amount</TableCell>
+                    <TableCell align="right">Actions</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </DialogContent>
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={handleOpenAddRevenue}
-          startIcon={<AttachMoneyIcon />}
-          sx={{
-              backgroundImage: 'linear-gradient(45deg, #4caf50, #81c784)',
-              color: 'white',
-              ':hover': {
-              bgcolor: 'success.dark',
-              boxShadow: '0 3px 5px 2px rgba(129, 199, 132, .3)',
-              },
-          }}
-          >
-          Add New Revenue
+                </TableHead>
+                <TableBody>
+                  {currentDetails.revenues.map((revenue) => (
+                    <TableRow key={revenue._id}>
+                      <TableCell>{revenue.description}</TableCell>
+                      <TableCell align="right">${revenue.amount.toFixed(2)}</TableCell>
+                      <TableCell align="right">
+                        <Button onClick={() => handleDeleteOpen(revenue, 'revenue')}>
+                          <DeleteIcon />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </DialogContent>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={handleOpenAddRevenue}
+            startIcon={<AttachMoneyIcon />}
+            sx={{
+                backgroundImage: 'linear-gradient(45deg, #4caf50, #81c784)',
+                color: 'white',
+                ':hover': {
+                bgcolor: 'success.dark',
+                boxShadow: '0 3px 5px 2px rgba(129, 199, 132, .3)',
+                },
+            }}
+            >
+            Add New Revenue
+          </Button>
+          
+          <Button onClick={handleRevenueCloseModal} color="primary" style={{ margin: '20px' }}>
+          Close
         </Button>
-        
-        <Button onClick={handleRevenueCloseModal} color="primary" style={{ margin: '20px' }}>
-        Close
-      </Button>
-    </Dialog>
+      </Dialog>
 
-    <Dialog open={breakdownModalOpen} onClose={handleBreakdownClose} fullWidth maxWidth="md">
-  <DialogTitle>Project Breakdown</DialogTitle>
-  <DialogContent>
-    <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-      <Typography variant="h5" component="div">{selectedProjectBreakdown?.name}</Typography>
-      <Box textAlign="right" flexShrink={0}>
-        <Typography variant="caption" display="block" color="textSecondary">Project Creation Date: {formatDate(selectedProjectBreakdown?.createdAt)}</Typography>
-        {selectedProjectBreakdown?.startDate && <Typography variant="caption" display="block" color="textSecondary">Start Date: {formatDate(selectedProjectBreakdown?.startDate)}</Typography>}
-        {selectedProjectBreakdown?.endDate && <Typography variant="caption" display="block" color="textSecondary">End Date: {formatDate(selectedProjectBreakdown?.endDate)}</Typography>}
-      </Box>
-    </Box>
-    {/* Example Table for Expenses, similar structure can be used for Revenues or other breakdown parts */}
-    
-    <Typography variant="h6" gutterBottom>Expenses</Typography>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Description</TableCell>
-            <TableCell align="right">Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {selectedProjectBreakdown?.expenses.map((expense) => (
-            <TableRow key={expense._id}>
-              <TableCell>{expense.description}</TableCell>
-              <TableCell align="right">${expense.amount.toFixed(2)}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    {/* Include similar tables for Revenues or other breakdown parts as needed */}
-    <Typography variant="h6" gutterBottom>Revenues</Typography>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Description</TableCell>
-            <TableCell align="right">Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {selectedProjectBreakdown?.revenues.map((revenue) => (
-            <TableRow key={revenue._id}>
-              <TableCell>{revenue.description}</TableCell>
-              <TableCell align="right">${revenue.amount.toFixed(2)}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    <Typography variant="h6" gutterBottom>Profit</Typography>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell align="right">Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-            <TableRow>
-              <TableCell>Total</TableCell>
-              <TableCell align="right">${selectedProjectBreakdown?.profit.toFixed(2)}</TableCell>
-            </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </DialogContent>
-  <Button onClick={handleBreakdownClose} color="primary" style={{ margin: '20px' }}>
-    Close
-  </Button>
-</Dialog>
+      <Dialog open={breakdownModalOpen} onClose={handleBreakdownClose} fullWidth maxWidth="md">
+        <DialogTitle>Project Breakdown</DialogTitle>
+          <DialogContent>
+            <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+              <Typography variant="h5" component="div">{selectedProjectBreakdown?.name}</Typography>
+              <Box textAlign="right" flexShrink={0}>
+                <Typography variant="caption" display="block" color="textSecondary">Project Creation Date: {formatDate(selectedProjectBreakdown?.createdAt)}</Typography>
+                {selectedProjectBreakdown?.startDate && <Typography variant="caption" display="block" color="textSecondary">Start Date: {formatDate(selectedProjectBreakdown?.startDate)}</Typography>}
+                {selectedProjectBreakdown?.endDate && <Typography variant="caption" display="block" color="textSecondary">End Date: {formatDate(selectedProjectBreakdown?.endDate)}</Typography>}
+              </Box>
+            </Box>
+            {/* Example Table for Expenses, similar structure can be used for Revenues or other breakdown parts */}
+            
+            <Typography variant="h6" gutterBottom>Expenses</Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Description</TableCell>
+                    <TableCell align="right">Amount</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {selectedProjectBreakdown?.expenses.map((expense) => (
+                    <TableRow key={expense._id}>
+                      <TableCell>{expense.description}</TableCell>
+                      <TableCell align="right">${expense.amount.toFixed(2)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {/* Include similar tables for Revenues or other breakdown parts as needed */}
+            <Typography variant="h6" gutterBottom>Revenues</Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Description</TableCell>
+                    <TableCell align="right">Amount</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {selectedProjectBreakdown?.revenues.map((revenue) => (
+                    <TableRow key={revenue._id}>
+                      <TableCell>{revenue.description}</TableCell>
+                      <TableCell align="right">${revenue.amount.toFixed(2)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Typography variant="h6" gutterBottom>Profit</Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell></TableCell>
+                    <TableCell align="right">Amount</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                    <TableRow>
+                      <TableCell>Total</TableCell>
+                      <TableCell align="right">${selectedProjectBreakdown?.profit.toFixed(2)}</TableCell>
+                    </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </DialogContent>
+        <Button onClick={handleBreakdownClose} color="primary" style={{ margin: '20px' }}>
+          Close
+        </Button>
+      </Dialog>
 
-{openAddRevenue && (
-  <AddRevenue open={openAddRevenue} handleClose={handleCloseAddRevenue} selectedProject={selectedProject} refreshProjects={refreshProjects}/>
-)}
-{openAddExpense && (
-  <AddExpense open={openAddExpense} handleClose={handleCloseAddExpense} selectedProject={selectedProject} refreshProjects={refreshProjects}/>
-)}
+      {openAddRevenue && (
+        <AddRevenue open={openAddRevenue} handleClose={handleCloseAddRevenue} selectedProject={selectedProject} refreshProjects={refreshProjects}/>
+      )}
+      {openAddExpense && (
+        <AddExpense open={openAddExpense} handleClose={handleCloseAddExpense} selectedProject={selectedProject} refreshProjects={refreshProjects}/>
+      )}
 
       <DataEditor
         open={editModalOpen}
@@ -384,7 +386,7 @@ const ProjectTable = ({ projects, refreshProjects }) => {
         refreshProjects={refreshProjects}
       />
 
-{deleteModalOpen && (
+      {deleteModalOpen && (
         <DataDeleter
           open={deleteModalOpen}
           handleClose={handleDeleteClose}
